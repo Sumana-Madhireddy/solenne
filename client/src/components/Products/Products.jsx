@@ -1,16 +1,5 @@
 import React, { useEffect, useState } from "react";
 import Product from "./Product/Product";
-// import black_top from '../../assets/Lounge_Tunic_black.jpg';
-// import blue_top from '../../assets/Lounge_Tunic_blue.jpg';
-// import cream_top from '../../assets/Lounge_Tunic_Cream.jpg';
-// import sonia_Skirt from '../../assets/Sonia_Skirt.jpg';
-
-// const products = [
-//     {id: 1, name: 'Lounge Tunic / Black', img: black_top, description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.', price: '$50.00', details: ['100% Cotton', 'Machine wash cold ', 'Tumble dry low']},
-//     {id: 2, name: 'Lounge Tunic / Blue', img: blue_top, description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.', price: '$50.00', details: ['100% Cotton', 'Machine wash cold ', 'Tumble dry low']},
-//     {id: 3, name: 'Lounge Tunic / Cream', img: cream_top, description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.', price: '$40.00', details: ['100% Cotton', 'Machine wash cold ', 'Tumble dry low']},
-//     {id: 4, name: 'Sonia Skirt', img: sonia_Skirt, description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.', price: '$50.00', details: ['100% Cotton', 'Machine wash cold ', 'Tumble dry low']},
-// ]
 
 const Products = () => {
     const [products, setProducts] = useState([]); 
@@ -25,6 +14,7 @@ const Products = () => {
             throw new Error('Failed to fetch products');
           }
           const data = await response.json();
+          console.log("products data: ",data);
           setProducts(data); 
           console.log("data img url -",data[0].img);
           setLoading(false); 

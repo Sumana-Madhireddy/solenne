@@ -66,5 +66,21 @@ app.get('/products',async (req,res)=>{
     }
 });
 
+app.get('/products/:id',async (req,res)=>{
+  const { id } = req.params;
+  try {
+      // const product = await Product.findByPk(id);
+      const product = await Product.findOne({ where: { id } }); 
+      if(product){
+        res.status(200).json(product);
+      } else {
+        res.status(404).json({ message: 'Product not found' });
+      }
+  } catch (error) {
+      console.error('Error fetching product:', error);
+      res.status(500).json({ error: 'An error occurred while fetching product' });
+  }
+});
+
 
 app.listen(PORT, ()=>console.log(`Server running on Port ${PORT}`));

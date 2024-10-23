@@ -16,6 +16,10 @@ export default (sequelize) => {
         type: DataTypes.STRING,
         allowNull: false,
       },
+      thumbnails: {
+          type: DataTypes.ARRAY(DataTypes.STRING),
+          allowNull: true,
+      },
       description: {
         type: DataTypes.TEXT,
         allowNull: false,
