@@ -59,6 +59,7 @@ app.post('/signin', async (req, res) => {
 app.get('/products',async (req,res)=>{
     try {
         const products = await Product.findAll();
+        console.log("products -- ",products);
         res.json(products);
     } catch (error) {
         console.error('Error fetching products:', error);
@@ -71,6 +72,7 @@ app.get('/products/:id',async (req,res)=>{
   try {
       // const product = await Product.findByPk(id);
       const product = await Product.findOne({ where: { id } }); 
+      console.log("Fetched product with thumbnails:", product); 
       if(product){
         res.status(200).json(product);
       } else {

@@ -6,6 +6,7 @@ import Products from './components/Products/Products';
 import Signup from './components/Signup/Signup';
 import Signin from './components/Signup/Signin';
 import ProductDetail from './components/Products/Product/ProductDetail';
+import Cart from './components/Products/Cart';
 
 
 const App = () => {
@@ -35,6 +36,7 @@ const App = () => {
             <Route path="/products" element={<Navigate to="/signin" />} />
             <Route path="/signin" element={<Signin onSignIn={() => setIsAuthenticated(true)} />} />
             <Route path="/signup" element={<Signup onSignup={() => setIsAuthenticated(true)} />} />
+            <Route path="/cart" element={<Navigate to="/signin" />} />
           </>
         ) : (
           <>
@@ -44,6 +46,7 @@ const App = () => {
             <Route path="/product-detail/:id" element={<ProductDetail />} />
             <Route path="/signin" element={<Navigate to="/products" />} />
             <Route path="/signup" element={<Navigate to="/products" />} />
+            <Route path='/cart' element={<Cart/>}/>
           </>
         )}
       </Routes>

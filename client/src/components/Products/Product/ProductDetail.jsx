@@ -1,10 +1,28 @@
-import React,{useEffect, useState} from "react";
+import React,{useEffect, useState, } from "react";
 import { useParams } from "react-router-dom";
+import ImageCarousel from "./ImageCarousel";
 
 const ProductDetail = () => {
     let { id } = useParams();
+    const [curIndex, setCurIndex] = useState(0);
     const [productDetails,setProductDetails] = useState(null);
-    const sizes = [1,2,3,4,5,6,7,8,9,10,11];
+    const [selectedSize, setSelectedSize] = useState('');
+    const [quantity, setQuantity] = useState(1);
+    const sizes = ['XS','S','M','L','XL','XXL'];
+
+    const handleSizeChnage=(size) => {
+        setSelectedSize(size);
+    };
+    const handleQuantityChange = (e) => {
+        setQuantity(e.target.value)
+    };
+    const handleAddToCart = () =>{
+        if (!selectedSize || !quantity) {
+            alert('Please Select Size and Quantity');
+        }
+        
+    };
+
     useEffect(() => {
         const fetchProductDetail = async () =>{
             try {
@@ -27,23 +45,26 @@ const ProductDetail = () => {
     return (
         <div className="container mx-auto p-6 flex">
             <div className="w-1/2 flex flex-col items-center">
-                <div className="mb-4">
+                {/* <div className="mb-4">
                     <img
                         src={productDetails.img}
                         alt={productDetails.name}
                         className="w-full h-auto object-cover"
                     ></img>
-                </div>
-                {/* <div className="flex space-x-2">
+                    <ImageCarousel thumbnails = {productDetails.thumbnails}/>
+                </div> */}
+                <ImageCarousel thumbnails = {productDetails.thumbnails} curIndex={curIndex} setCurIndex={setCurIndex}/>
+                <div className="flex space-x-2 pt-2">
                     {productDetails.thumbnails.map((thumb, index) => (
                         <img
                             key={index}
                             src={thumb}
                             alt={`Thumbnail ${index + 1}`}
-                            className="w-16 h-16 object-cover cursor-pointer"
+                            className="w-24 h-24 object-cover cursor-pointer"
+                            onClick={()=>setCurIndex(index)}
                         />
                     ))}
-                </div> */}
+                </div>
             </div>
             <div className="w-1/2 pl-8">
                 <h1 className="text-3xl font-semibold mb-2">{productDetails.name}</h1>
@@ -61,8 +82,14 @@ const ProductDetail = () => {
                     <div className="flex space-x-2">
                         {sizes.map((size, index) => (
                             <button
+                                onClick={()=>handleSizeChnage(size)}
                                 key={index}
-                                className="border p-2 rounded text-gray-600 hover:border-black"
+                                // className="border-2 p-2 rounded h-20 w-20 text-gray-600 text-lg hover:border-black hover:text-black"
+                                className={
+                                    selectedSize === size
+                                        ? "border-2 p-2 rounded h-20 w-20 text-white text-lg bg-slate-800 hover:border-black"
+                                        : "border-2 p-2 rounded h-20 w-20 text-gray-600 text-lg hover:border-black hover:text-black"
+                                }
                             >
                                 {size}
                             </button>
@@ -75,10 +102,11 @@ const ProductDetail = () => {
                         type="number"
                         min="0"
                         defaultValue="0"
-                        className="border p-2 w-16 text-center"
+                        onClick={handleQuantityChange}
+                        className="border-2 p-2 h-20 w-20 text-2xl text-center"
                     />
                 </div>
-                <button className="bg-black text-white px-4 py-2 rounded hover:bg-gray-800">
+                <button className="bg-gray-800 text-white px-4 py-2 rounded hover:bg-black">
                     Add to Cart
                 </button>
             </div>

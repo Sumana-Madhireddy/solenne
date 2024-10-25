@@ -16,7 +16,7 @@ const removeDuplicates = async () => {
         where: {
           name: duplicate.name
         },
-        order: [['createdAt', 'ASC']] // Keep the first, delete others
+        order: [['createdAt', 'DESC']] // Keep the first, delete others
       });
 
       const [firstProduct, ...otherProducts] = products;
