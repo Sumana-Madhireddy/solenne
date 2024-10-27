@@ -7,6 +7,7 @@ import Signup from './components/Signup/Signup';
 import Signin from './components/Signup/Signin';
 import ProductDetail from './components/Products/Product/ProductDetail';
 import Cart from './components/Products/Cart';
+import { CartProvider } from './components/Context/CartContext';
 
 
 const App = () => {
@@ -27,6 +28,7 @@ const App = () => {
   console.log('isAuthenticated:', isAuthenticated);
   
   return (
+    <CartProvider>
     <Router>
       {isAuthenticated && <Header onSignOut={handleSignOut}/>}
       <Routes>
@@ -51,7 +53,8 @@ const App = () => {
         )}
       </Routes>
     </Router>
-  )
+    </CartProvider>
+  );
 }
 
 export default App;

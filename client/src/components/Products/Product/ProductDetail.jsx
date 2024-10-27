@@ -1,14 +1,17 @@
-import React,{useEffect, useState, } from "react";
-import { useParams } from "react-router-dom";
+import React,{ useEffect, useState, } from "react";
+import { useParams, useNavigate } from "react-router-dom";
 import ImageCarousel from "./ImageCarousel";
+import {useCart} from '../../Context/CartContext';
 
 const ProductDetail = () => {
+    const navigate = useNavigate();
     let { id } = useParams();
     const [curIndex, setCurIndex] = useState(0);
     const [productDetails,setProductDetails] = useState(null);
     const [selectedSize, setSelectedSize] = useState('');
     const [quantity, setQuantity] = useState(1);
     const sizes = ['XS','S','M','L','XL','XXL'];
+    const {dispatch} = useCart();
 
     const handleSizeChnage=(size) => {
         setSelectedSize(size);
@@ -17,10 +20,23 @@ const ProductDetail = () => {
         setQuantity(e.target.value)
     };
     const handleAddToCart = () =>{
-        if (!selectedSize || !quantity) {
-            alert('Please Select Size and Quantity');
+        if (!selectedSize) {
+            alert('Please Select Size ');
+            return;
         }
-        
+        dispatch({
+            type: 'ADD_TO_CART',
+            payload: {
+                id: productDetails.id,
+                name: productDetails.name,
+                img: productDetails.img,
+                price: productDetails.price,
+                selectedSize,
+                quantity,
+            }
+        });
+        alert('Product added to cart');
+        navigate('/cart'); 
     };
 
     useEffect(() => {
@@ -84,7 +100,6 @@ const ProductDetail = () => {
                             <button
                                 onClick={()=>handleSizeChnage(size)}
                                 key={index}
-                                // className="border-2 p-2 rounded h-20 w-20 text-gray-600 text-lg hover:border-black hover:text-black"
                                 className={
                                     selectedSize === size
                                         ? "border-2 p-2 rounded h-20 w-20 text-white text-lg bg-slate-800 hover:border-black"
@@ -100,13 +115,13 @@ const ProductDetail = () => {
                     <h3 className="text-lg font-semibold mb-1">Quantity:</h3>
                     <input
                         type="number"
-                        min="0"
-                        defaultValue="0"
+                        min="1"
+                        defaultValue="1"
                         onClick={handleQuantityChange}
                         className="border-2 p-2 h-20 w-20 text-2xl text-center"
                     />
                 </div>
-                <button className="bg-gray-800 text-white px-4 py-2 rounded hover:bg-black">
+                <button onClick={handleAddToCart} className="bg-gray-800 text-white px-4 py-2 rounded hover:bg-black">
                     Add to Cart
                 </button>
             </div>

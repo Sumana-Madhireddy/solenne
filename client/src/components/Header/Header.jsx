@@ -1,12 +1,17 @@
 import React from "react";
 import CartButton from './Cart/CartButton';
-import { useNavigate } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom';
+import { useCart } from "../Context/CartContext";
 
 const Header = ({ onSignOut }) => {
     const navigate = useNavigate();
+    const { cartCount } = useCart(); 
     const handleSignOut = () => {
         onSignOut(); 
         navigate('/signin'); 
+    };
+    const handleCartClick = () => {
+        navigate('/cart'); 
     };
 
     return (
@@ -24,7 +29,7 @@ const Header = ({ onSignOut }) => {
             </div>
             <div className="flex items-center space-x-4">
                 <a onClick={handleSignOut} className="hover:text-gray-500 font-heading">Signout</a>
-                <a className="hover:text-gray-500 font-heading"><CartButton cartCount={2} /></a>
+                <a onClick={handleCartClick} className="hover:text-gray-500 font-heading"><CartButton cartCount={cartCount} /></a>
             </div>
         </div>
     );
