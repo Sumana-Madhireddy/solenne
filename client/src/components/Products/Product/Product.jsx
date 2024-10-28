@@ -1,10 +1,8 @@
 import React from "react";
-import { Link, useNavigate } from 'react-router-dom';
-import { useCart } from "../../Context/CartContext";
+import { useNavigate } from 'react-router-dom';
 
 const Product = ({product}) => {
     const navigate = useNavigate();
-    const {dispatch} = useCart();
     const handleNavigate = () => {
         navigate(`/product-detail/${product.id}`);
     };

@@ -6,8 +6,9 @@ import Products from './components/Products/Products';
 import Signup from './components/Signup/Signup';
 import Signin from './components/Signup/Signin';
 import ProductDetail from './components/Products/Product/ProductDetail';
-import Cart from './components/Products/Cart';
+import Cart from './components/Cart/Cart';
 import { CartProvider } from './components/Context/CartContext';
+import CheckoutSuccess from './components/Cart/CheckoutSuccess';
 
 
 const App = () => {
@@ -39,6 +40,7 @@ const App = () => {
             <Route path="/signin" element={<Signin onSignIn={() => setIsAuthenticated(true)} />} />
             <Route path="/signup" element={<Signup onSignup={() => setIsAuthenticated(true)} />} />
             <Route path="/cart" element={<Navigate to="/signin" />} />
+            <Route path="/checkout-success" element={<Navigate to="/signin" />} />
           </>
         ) : (
           <>
@@ -49,6 +51,7 @@ const App = () => {
             <Route path="/signin" element={<Navigate to="/products" />} />
             <Route path="/signup" element={<Navigate to="/products" />} />
             <Route path='/cart' element={<Cart/>}/>
+            <Route path='/checkout-success' element={<CheckoutSuccess/>}/>
           </>
         )}
       </Routes>

@@ -1,11 +1,14 @@
 import React from "react";
 import { useCart } from "../Context/CartContext";
 import { useNavigate } from 'react-router-dom';
-import ProductDetail from "./Product/ProductDetail";
+import CheckoutButton from './CheckoutButton';
 
 const Cart = () => {
     const navigate = useNavigate();
     const {cart, dispatch} = useCart();
+    
+    console.log("Cart - ",cart);
+
     const handleShop = () => {
         navigate('/'); 
     };
@@ -84,9 +87,10 @@ const Cart = () => {
             </ul>
             <div className="mt-4">
                 <h2 className="text-2xl font-semibold">Total: ${calculateTotal()}</h2>
-                <button onClick={handleCheckout} className="bg-gray-800 text-white px-4 py-2 rounded hover:bg-black">
+                {/* <button onClick={handleCheckout} className="bg-gray-800 text-white px-4 py-2 rounded hover:bg-black">
                     Checkout
-                </button>
+                </button> */}
+                <CheckoutButton/>
             </div>
         </div>
     );

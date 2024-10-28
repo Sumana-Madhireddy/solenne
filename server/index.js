@@ -7,6 +7,7 @@ import db from './models/index.js';
 import cors from 'cors';
 import path from 'path';
 import { fileURLToPath } from 'url';
+import Stripe from 'stripe';
 
 dotenv.config();
 const { User, Product } = db;
@@ -14,6 +15,15 @@ const app = express();
 const PORT = process.env.PORT || 5000;
 app.use(bodyParser.json());
 app.use(cors());
+// app.use(cors({
+//   origin: 'http://localhost:3000', // Replace with your frontend URL
+//   methods: ['GET', 'POST'],
+//   credentials: true
+// }));
+
+const CLIENT_URL = 'http://localhost:PORT';
+const stripe = Stripe(process.env.STRIPE_SECRET_KEY);
+// const stripe = Stripe('sk_test_51QEr6hGprWRUDCQ173zpbE95jfyANxwj33S5E4qmLiam9hMfHV2vdIQVOtBr8VlShjIBEJMqsQ5Q3lCqQg99ERt800Oyp1fZcS');
 
 const __filename = fileURLToPath(import.meta.url);
 console.log("__filename",__filename);
@@ -81,6 +91,35 @@ app.get('/products/:id',async (req,res)=>{
   } catch (error) {
       console.error('Error fetching product:', error);
       res.status(500).json({ error: 'An error occurred while fetching product' });
+  }
+});
+
+
+app.post('/create-checkout-session', async (req, res) => {
+  const {cartItems} = req.body;
+  console.log('Received checkout request:', cartItems.cart);
+  try {
+    const session = await stripe.checkout.sessions.create({
+      payment_method_types: ["card"],
+      line_items: cartItems.cart.map(item=>({
+        price_data:{
+          currency: 'usd',
+          product_data: {
+            name: item.name,
+          },
+          unit_amount: Math.round(item.price*100),
+        },
+        quantity: item.quantity,
+      })),
+      mode: "payment",
+      success_url: `${req.headers.origin}/checkout-success`,
+      cancel_url: `${req.headers.origin}/cart`,
+  });
+  console.log('Stripe session created:', session);
+    res.send({url: session.url});
+  } catch (error) {
+    console.error('Error creating checkout session:', error);
+    res.status(500).json({ error: 'Failed to create checkout session' });
   }
 });
 
