@@ -20,13 +20,37 @@ const Cart = () => {
                 </button>
             </div>
         );
-    }
+    };
+
+    const handleIncreaseQuantity = (item) => {
+        dispatch({
+            type: 'ADD_TO_CART',
+            payload: {...item,quantity: 1},
+        });
+    };
+
+    const handleDecreaseQuantity = (item) => {
+        if (item.quantity > 1){
+            dispatch({
+                type: 'ADD_TO_CART',
+                payload: {...item, quantity: -1},
+            });
+        }
+    };
 
     const handleRemoveFromCart = (item) => {
         dispatch({
             type: 'REMOVE_FROM_CART',
             payload: item,
         });
+    };
+
+    const calculateTotal = () => {
+        return cart.reduce((total,item)=> total+item.price*item.quantity,0).toFixed(2);
+    };
+
+    const handleCheckout = () => {
+        alert('Proceeding to checkout');
     };
 
     return (
@@ -43,7 +67,12 @@ const Cart = () => {
                             <div>
                                 <h2 className="text-xl font-semibold">{item.name}</h2>
                                 <p>Size: {item.selectedSize}</p>
-                                <p>Quantity: {item.quantity}</p>
+                                {/* <p>Quantity: {item.quantity}</p> */}
+                                <div>
+                                    <button className="text-black px-2 py-1 rounded" onClick={()=>handleDecreaseQuantity(item)}>-</button>
+                                    <span className="mx-2">{item.quantity}</span>
+                                    <button className="text-black px-2 py-1 rounded" onClick={()=>handleIncreaseQuantity(item)}>+</button>
+                                </div>
                                 <p>Price: ${(item.price * item.quantity).toFixed(2)}</p>
                             </div>
                         </div>
@@ -53,6 +82,12 @@ const Cart = () => {
                     </li>
                 ))}
             </ul>
+            <div className="mt-4">
+                <h2 className="text-2xl font-semibold">Total: ${calculateTotal()}</h2>
+                <button onClick={handleCheckout} className="bg-gray-800 text-white px-4 py-2 rounded hover:bg-black">
+                    Checkout
+                </button>
+            </div>
         </div>
     );
 };
