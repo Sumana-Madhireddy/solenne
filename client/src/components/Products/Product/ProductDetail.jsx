@@ -1,7 +1,7 @@
-import React,{ useEffect, useState, } from "react";
+import React,{ useContext, useEffect, useState, } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import ImageCarousel from "./ImageCarousel";
-import {useCart} from '../../Context/CartContext';
+import { CartContext } from "../../Context/CartContext";
 
 const ProductDetail = () => {
     const navigate = useNavigate();
@@ -11,33 +11,26 @@ const ProductDetail = () => {
     const [selectedSize, setSelectedSize] = useState('');
     const [quantity, setQuantity] = useState(1);
     const sizes = ['XS','S','M','L','XL','XXL'];
-    const {dispatch} = useCart();
+    const {addItemToCart} = useContext(CartContext);
 
     const handleSizeChnage=(size) => {
         setSelectedSize(size);
     };
+
     const handleQuantityChange = (e) => {
         setQuantity(e.target.value)
     };
-    const handleAddToCart = () =>{
-        if (!selectedSize) {
-            alert('Please Select Size ');
+ 
+    const handleAddToCart = async () => {
+        if(!selectedSize) {
+            alert("Please select a size before adding to cart.");
             return;
         }
-        dispatch({
-            type: 'ADD_TO_CART',
-            payload: {
-                id: productDetails.id,
-                name: productDetails.name,
-                img: productDetails.img,
-                price: productDetails.price,
-                selectedSize,
-                quantity,
-            }
-        });
-        alert('Product added to cart');
-        navigate('/cart'); 
+        addItemToCart(productDetails.id, quantity, selectedSize);
+        alert("Product added to Cart.");
+        navigate('/cart');
     };
+    
 
     useEffect(() => {
         const fetchProductDetail = async () =>{
@@ -54,7 +47,6 @@ const ProductDetail = () => {
         } 
         fetchProductDetail();
     },[id]);
-    console.log("productDetails",productDetails);
     if (!productDetails) {
         return <div>Loading...</div>; 
     }

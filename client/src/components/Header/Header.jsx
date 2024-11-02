@@ -1,11 +1,11 @@
-import React from "react";
+import React, { useContext } from "react";
 import CartButton from './CartButton/CartButton';
 import { useNavigate } from 'react-router-dom';
-import { useCart } from "../Context/CartContext";
+import { CartContext } from "../Context/CartContext";
 
 const Header = ({ onSignOut }) => {
     const navigate = useNavigate();
-    const { cartCount } = useCart(); 
+    const {cart} = useContext(CartContext);
     const handleSignOut = () => {
         onSignOut(); 
         navigate('/signin'); 
@@ -13,6 +13,7 @@ const Header = ({ onSignOut }) => {
     const handleCartClick = () => {
         navigate('/cart'); 
     };
+    const cartCount = cart.items ? cart.items.reduce((count, item) => count + item.quantity, 0) : 0;
 
     return (
         <div className="flex flex-wrap md:flex-nowrap justify-between items-center m-5 md:m-10 h-14 bg-white text-black">

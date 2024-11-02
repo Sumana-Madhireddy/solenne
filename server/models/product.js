@@ -3,7 +3,11 @@ import { Model, DataTypes } from 'sequelize';
 export default (sequelize) => {
     class Product extends Model {
       static associate(models) {
-        // Define associations here if needed
+        Product.belongsToMany(models.Cart, {
+          through: models.CartItem,
+          foreignKey: 'productId',
+          otherKey: 'cartId',
+        });
       }
     }
   

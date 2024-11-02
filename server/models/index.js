@@ -1,47 +1,3 @@
-// 'use strict';
-
-// const fs = require('fs');
-// const path = require('path');
-// const Sequelize = require('sequelize');
-// const process = require('process');
-// const basename = path.basename(__filename);
-// const env = process.env.NODE_ENV || 'development';
-// const config = require(__dirname + '/../config/config.json')[env];
-// const db = {};
-
-// let sequelize;
-// if (config.use_env_variable) {
-//   sequelize = new Sequelize(process.env[config.use_env_variable], config);
-// } else {
-//   sequelize = new Sequelize(config.database, config.username, config.password, config);
-// }
-
-// fs
-//   .readdirSync(__dirname)
-//   .filter(file => {
-//     return (
-//       file.indexOf('.') !== 0 &&
-//       file !== basename &&
-//       file.slice(-3) === '.js' &&
-//       file.indexOf('.test.js') === -1
-//     );
-//   })
-//   .forEach(file => {
-//     const model = require(path.join(__dirname, file))(sequelize, Sequelize.DataTypes);
-//     db[model.name] = model;
-//   });
-
-// Object.keys(db).forEach(modelName => {
-//   if (db[modelName].associate) {
-//     db[modelName].associate(db);
-//   }
-// });
-
-// db.sequelize = sequelize;
-// db.Sequelize = Sequelize;
-
-// module.exports = db;
-
 import fs from 'fs';
 import path from 'path';
 import { Sequelize } from 'sequelize';
@@ -99,3 +55,43 @@ db.sequelize = sequelize;
 db.Sequelize = Sequelize;
 
 export default db;
+
+
+
+// models/index.js
+// import { Sequelize } from 'sequelize';
+// import configFile from '../config/config.json' assert { type: 'json' };
+
+// // Import each model directly
+// import UserModel from './user.js';
+// import ProductModel from './product.js';
+// import CartModel from './cart.js';
+// import CartItemModel from './cartItem.js';
+
+
+// const env = process.env.NODE_ENV || 'development';
+// const config = configFile[env];
+
+// // Initialize Sequelize
+// const sequelize = new Sequelize(config.database, config.username, config.password, config);
+
+// const db = {};
+
+// // Initialize models
+// db.User = UserModel(sequelize, Sequelize.DataTypes);
+// db.Product = ProductModel(sequelize, Sequelize.DataTypes);
+// db.Cart = CartModel(sequelize, Sequelize.DataTypes);
+// db.CartItem = CartItemModel(sequelize, Sequelize.DataTypes);
+
+// // Set up associations manually
+// Object.keys(db).forEach(modelName => {
+//   if (db[modelName].associate) {
+//     db[modelName].associate(db);
+//   }
+// });
+
+// // Export the db object and Sequelize instance
+// db.sequelize = sequelize;
+// db.Sequelize = Sequelize;
+
+// export default db;

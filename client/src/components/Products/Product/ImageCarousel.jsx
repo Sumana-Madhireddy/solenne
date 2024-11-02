@@ -15,7 +15,6 @@ const ImageCarousel = ({thumbnails, curIndex, setCurIndex}) => {
         );
     }
 
-    console.log("thumbnails ", thumbnails);
     return (
         <div className="flex w-full items-center justify-center relative">
             <button className="bg-none border-none" onClick={handlePrevious}><FiChevronLeft /></button>
