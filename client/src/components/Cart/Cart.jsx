@@ -44,6 +44,10 @@ const Cart = () => {
     const calculateTotal = () => {
         return cart.items.reduce((total, item) => total + item.product.price * item.quantity, 0).toFixed(2);
     };
+    const handleNavigate = (productId) => {
+        console.log('productId - ',productId);
+        navigate(`/product-detail/${productId}`);
+    };
 
 
     return (
@@ -54,11 +58,12 @@ const Cart = () => {
                     <li key={index} className="flex items-center justify-between border p-4">
                         <div className="flex items-center space-x-4">
                             <img 
+                            onClick={() => handleNavigate(item.productId)}
                             src={item.product.img}
                             alt={item.product.name}
-                            className="w-24 h-24 object-cover"></img>
+                            className="w-24 h-24 object-cover hover:cursor-pointer"></img>
                             <div>
-                                <h2 className="text-xl font-semibold">{item.product.name}</h2>
+                                <h2 onClick={() =>handleNavigate(item.productId)} className="text-xl font-semibold hover:cursor-pointer">{item.product.name}</h2>
                                 <p>Size: {item.size}</p>
                                 <div>
                                     <button className="text-black px-2 py-1 rounded" onClick={()=>handleDecreaseQuantity(item)}>-</button>
