@@ -41,20 +41,57 @@ export const CartProvider = ({children}) => {
     const addItemToCart = async (productId, quantity, size) => {
         setLoading(true);
         try {
-            const response = await fetch('http://localhost:5000/cart/add',{
-                method: 'POST',
-                headers:  {
-                    'Authorization': `Bearer ${token}`,
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({productId,quantity,size}),
-            });
-            console.log('addItemToCart response - ',response);
-            if(response.ok) {
-                await getCartItems();
+            const existingItem = cart.items.find(
+                (item) => item.productId === productId && item.size === size
+            );
+            if (existingItem) {
+                // If the item exists, increase its quantity
+                const newQuantity = existingItem.quantity + quantity;
+                const response = await fetch(`http://localhost:5000/cart/update/${existingItem.cartItemId}`, {
+                    method: 'PUT',
+                    headers: {
+                        'Authorization': `Bearer ${token}`,
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ quantity: newQuantity }),
+                });
+                if (response.ok) {
+                    const updatedCart = await response.json();
+                    setCart(updatedCart);
+                } else {
+                    console.error('Failed to update item quantity in cart');
+                }
             } else {
-                console.error('Failed to add item to cart');
+                // If the item does not exist, add it as a new item
+                const response = await fetch('http://localhost:5000/cart/add', {
+                    method: 'POST',
+                    headers: {
+                        'Authorization': `Bearer ${token}`,
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ productId, quantity, size }),
+                });
+    
+                if (response.ok) {
+                    await getCartItems(); // Refresh the cart after adding
+                } else {
+                    console.error('Failed to add item to cart');
+                }
             }
+            // const response = await fetch('http://localhost:5000/cart/add',{
+            //     method: 'POST',
+            //     headers:  {
+            //         'Authorization': `Bearer ${token}`,
+            //         'Content-Type': 'application/json',
+            //     },
+            //     body: JSON.stringify({productId,quantity,size}),
+            // });
+            // console.log('addItemToCart response - ',response);
+            // if(response.ok) {
+            //     await getCartItems();
+            // } else {
+            //     console.error('Failed to add item to cart');
+            // }
         } catch (error) {
             console.error('Error adding item to cart:', error);
         } finally {
