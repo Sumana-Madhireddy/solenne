@@ -7,7 +7,7 @@ const Cart = () => {
     const navigate = useNavigate();
     const {cart, increaseQuantity, decreaseQuantity, removeItemFromCart, clearCart} = useContext(CartContext);
     
-    console.log("Cart - ",cart);
+    console.log("Cart cart- ",cart);
 
     const handleShop = () => {
         navigate('/'); 
@@ -59,8 +59,7 @@ const Cart = () => {
                             className="w-24 h-24 object-cover"></img>
                             <div>
                                 <h2 className="text-xl font-semibold">{item.product.name}</h2>
-                                <p>Size: {item.selectedSize}</p>
-                                {/* <p>Quantity: {item.quantity}</p> */}
+                                <p>Size: {item.size}</p>
                                 <div>
                                     <button className="text-black px-2 py-1 rounded" onClick={()=>handleDecreaseQuantity(item)}>-</button>
                                     <span className="mx-2">{item.quantity}</span>

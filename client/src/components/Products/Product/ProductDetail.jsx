@@ -11,14 +11,15 @@ const ProductDetail = () => {
     const [selectedSize, setSelectedSize] = useState('');
     const [quantity, setQuantity] = useState(1);
     const sizes = ['XS','S','M','L','XL','XXL'];
-    const {addItemToCart} = useContext(CartContext);
+    const { addItemToCart } = useContext(CartContext);
 
     const handleSizeChnage=(size) => {
         setSelectedSize(size);
     };
 
     const handleQuantityChange = (e) => {
-        setQuantity(e.target.value)
+        const value = parseInt(e.target.value);
+        setQuantity(value > 0 ? value : 1);
     };
  
     const handleAddToCart = async () => {
@@ -30,7 +31,6 @@ const ProductDetail = () => {
         alert("Product added to Cart.");
         navigate('/cart');
     };
-    
 
     useEffect(() => {
         const fetchProductDetail = async () =>{

@@ -1,49 +1,3 @@
-// import React, { createContext, useReducer, useContext, useEffect } from "react";
-
-// // const initialCartState = [];
-// const initialCartState = JSON.parse(localStorage.getItem('cart')) || [];
-
-// const cartReducer = (state, action) => {
-//     switch(action.type) {
-//         case 'ADD_TO_CART':
-//             const newQuantity = Number(action.payload.quantity);
-//             const existingItem = state.find(
-//                 item => item.id === action.payload.id && item.selectedSize === action.payload.selectedSize
-//             );
-//             if (existingItem) {
-//                 return state.map(item => 
-//                     item.id === action.payload.id && item.selectedSize === action.payload.selectedSize ?
-//                     {...item,quantity:item.quantity+newQuantity}: item
-//                 );
-//             }
-//             return [...state,{...action.payload,quantity: newQuantity}];
-//         case 'REMOVE_FROM_CART':
-//             return state.filter(item=> item.id !== action.payload.id || item.selectedSize !== action.payload.selectedSize);
-//         default:
-//             return state;
-//     }
-// }
-
-// const CartContext = createContext();
-
-
-// export const CartProvider = ({children}) => {
-//     const [cart,dispatch] = useReducer(cartReducer,initialCartState);
-//     const cartCount = cart.reduce((total,item) => total+item.quantity,0);
-//     useEffect(() => {
-//         localStorage.setItem('cart',JSON.stringify(cart));
-//     },[cart]);
-//     return (
-//         <CartContext.Provider value = {{cart,cartCount,dispatch}}>
-//             {children}
-//         </CartContext.Provider>
-//     );
-// }
-
-// export const useCart = () => useContext(CartContext);
-
-
-
 import React, { createContext, useEffect, useState } from "react";
 
 export const CartContext = createContext();
@@ -52,13 +6,14 @@ export const CartProvider = ({children}) => {
     const [cart,setCart] = useState({items: []});
     const [loading, setLoading] = useState(false);
     const token = localStorage.getItem('authToken');
-    console.log('TOken ', token);
+    console.log('Token ', token);
 
     useEffect(()=>{
         if (token) {
             getCartItems();
         }
     },[token]);
+    console.log('Context cart ',cart);
 
     const getCartItems = async () => {
         setLoading(true);
@@ -71,6 +26,7 @@ export const CartProvider = ({children}) => {
             });
             if (response.ok) {
                 const data = await response.json();
+                console.log('data - ',data);
                 setCart(data);
             } else {
                 console.error('Failed to fetch cart items');
