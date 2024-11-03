@@ -27,10 +27,9 @@ const Signin = ({ onSignIn }) => {
       });
 
       if (response.ok) {
-        console.log('User signed in successfully');
         const data = await response.json();
-        console.log("Sign-in Response:", data); 
-        localStorage.setItem('authToken', data.token); 
+        localStorage.setItem('authToken', data.accessToken); 
+        localStorage.setItem('refreshToken', data.refreshToken); 
         localStorage.setItem('username',data.username);
         onSignIn(); 
       } else if(response.status === 404){

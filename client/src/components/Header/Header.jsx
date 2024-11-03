@@ -8,7 +8,6 @@ const Header = ({ onSignOut }) => {
     const navigate = useNavigate();
     const {cart} = useContext(CartContext);
     const username = localStorage.getItem('username');
-    console.log("username - ",username);
     const handleSignOut = () => {
         onSignOut(); 
         navigate('/signin'); 

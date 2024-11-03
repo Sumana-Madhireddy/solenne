@@ -27,9 +27,9 @@ const Signup = ({ onSignup }) => {
       });
 
       if (response.ok) {
-        console.log('User signed up successfully');
         const data = await response.json();
-        localStorage.setItem('authToken', data.token); 
+        localStorage.setItem('authToken', data.accessToken); 
+        localStorage.setItem('refreshToken', data.refreshToken); 
         localStorage.setItem('username',data.username);
         onSignup(); 
       } else {

@@ -27,7 +27,7 @@ const ProductDetail = () => {
             alert("Please select a size before adding to cart.");
             return;
         }
-        addItemToCart(productDetails.id, quantity, selectedSize);
+        await addItemToCart(productDetails.id, quantity, selectedSize);
         alert("Product added to Cart.");
         navigate('/cart');
     };

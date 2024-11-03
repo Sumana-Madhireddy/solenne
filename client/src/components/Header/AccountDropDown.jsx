@@ -12,7 +12,7 @@ export const AccountDropDown = ({ onSignOut, username }) => {
         navigate('/account');
 
     }
-    const handleOrdersClick = () => {
+    const handleOrders= () => {
         navigate('/orders');
     }
 
@@ -27,7 +27,7 @@ export const AccountDropDown = ({ onSignOut, username }) => {
                     Account
                 </button>
                 <button
-                    onClick={handleOrdersClick}
+                    onClick={handleOrders}
                     className="px-4 py-2 text-gray-700 hover:bg-gray-100 w-full text-left"
                 >
                     Orders

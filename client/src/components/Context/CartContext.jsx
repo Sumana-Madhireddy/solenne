@@ -6,7 +6,7 @@ export const CartProvider = ({children}) => {
     const [cart,setCart] = useState({items: []});
     const [loading, setLoading] = useState(false);
     const token = localStorage.getItem('authToken');
-    console.log('Token ', token);
+    const refreshToken = localStorage.getItem('refreshToken');
 
     useEffect(()=>{
         if (token) {
@@ -15,15 +15,54 @@ export const CartProvider = ({children}) => {
     },[token]);
     console.log('Context cart ',cart);
 
+    const refreshAccessToken = async () => {
+        try {
+            const response = await fetch('http://localhost:5000/refresh-token', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ refreshToken }),
+            });
+            if (response.ok) {
+                const data = await response.json();
+                localStorage.setItem('authToken', data.accessToken); // Update access token
+                return data.accessToken;
+            } else {
+                // If refresh token fails, redirect to login
+                console.error('Refresh token expired. Please log in again.');
+                // Clear tokens and redirect to login if needed
+            }
+        } catch (error) {
+            console.error('Error refreshing access token:', error);
+        }
+    };
+
     const getCartItems = async () => {
         setLoading(true);
+        let currentToken = localStorage.getItem('authToken');
         try {
-            const response = await fetch('http://localhost:5000/cart',{
+            let response = await fetch('http://localhost:5000/cart',{
                 headers: {
                     'Authorization': `Bearer ${token}`,
                     'Content-Type': 'application/json',
                 },
             });
+
+            if (response.status === 401) {
+                currentToken = await refreshAccessToken();  // Call your refresh function here
+                if (currentToken) {
+                    response = await fetch('http://localhost:5000/cart', {
+                        headers: {
+                            'Authorization': `Bearer ${currentToken}`,
+                            'Content-Type': 'application/json',
+                        },
+                    });
+                } else {
+                    // If refresh fails, handle logout or prompt user to re-authenticate
+                    console.error('Session expired. Please log in again.');
+                    return;
+                }
+            }
+
             if (response.ok) {
                 const data = await response.json();
                 console.log('data - ',data);

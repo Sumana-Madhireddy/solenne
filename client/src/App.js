@@ -11,6 +11,7 @@ import { CartProvider } from './components/Context/CartContext';
 import CheckoutSuccess from './components/Cart/CheckoutSuccess';
 import Account from './components/Account/Account';
 import Orders from './components/Orders/Orders';
+import OrderSummary from './components/Orders/OrderSummary';
 
 
 const App = () => {
@@ -31,7 +32,6 @@ const App = () => {
     localStorage.removeItem('authToken');
     localStorage.removeItem('username');
   };
-  console.log('isAuthenticated:', isAuthenticated);
 
   
   return (
@@ -65,6 +65,7 @@ const App = () => {
             <Route path='/checkout-success' element={<CheckoutSuccess/>}/>
             <Route path='/account' element={<Account/>}/>
             <Route path='/orders' element={<Orders/>}/>
+            <Route path="/order-summary/:orderId" element={<OrderSummary />} />
           </>
         )}
       </Routes>

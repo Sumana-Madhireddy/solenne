@@ -10,7 +10,7 @@ import { fileURLToPath } from 'url';
 import Stripe from 'stripe';
 
 dotenv.config();
-const { User, Product, Cart, CartItem } = db;
+const { User, Product, Cart, CartItem, Order, OrderItem } = db;
 const app = express();
 const PORT = process.env.PORT || 5000;
 app.use(bodyParser.json());
@@ -35,6 +35,25 @@ const authenticateUser = (req, res, next) => {
     res.status(401).json({ error: 'Invalid token' });
   }
 };
+
+app.post('/refresh-token', async (req, res) => {
+  const { refreshToken } = req.body;
+  if (!refreshToken) return res.status(401).json({ error: 'Unauthorized' });
+
+  try {
+      // Verify the refresh token
+      const decoded = jwt.verify(refreshToken, process.env.REFRESH_TOKEN_SECRET);
+
+      // Generate a new access token
+      const newAccessToken = jwt.sign({ userId: decoded.userId }, process.env.JWT_SECRET, { expiresIn: process.env.ACCESS_TOKEN_EXPIRY });
+      
+      res.json({ accessToken: newAccessToken });
+  } catch (error) {
+      console.error('Invalid refresh token:', error);
+      res.status(403).json({ error: 'Invalid refresh token' });
+  }
+});
+
 
 const saltRounds = 10;
 app.post('/signup', async (req,res) => {
@@ -65,8 +84,11 @@ app.post('/signin', async (req, res) => {
       if (!isMatch) {
         return res.status(400).json({ error: 'Invalid credentials' });
       }
-      const token = jwt.sign({ userId: user.id }, process.env.JWT_SECRET, { expiresIn: '1h' });
-      res.json({ token,username: user.username });
+      // const token = jwt.sign({ userId: user.id }, process.env.JWT_SECRET, { expiresIn: '1h' });
+      const accessToken = jwt.sign({ userId: user.id }, process.env.JWT_SECRET, { expiresIn: process.env.ACCESS_TOKEN_EXPIRY });
+      const refreshToken = jwt.sign({ userId: user.id }, process.env.REFRESH_TOKEN_SECRET, { expiresIn: process.env.REFRESH_TOKEN_EXPIRY });
+      res.json({ accessToken, refreshToken, username: user.username });
+      // res.json({ token,username: user.username });
     } catch (error) {
       res.status(500).json({ error: 'Error during sign in' });
     }
@@ -233,31 +255,179 @@ app.delete('/cart/clear', authenticateUser, async (req, res) => {
   }
 });
 
-app.post('/create-checkout-session', async (req, res) => {
-  const {cartItems} = req.body;
+app.post('/orders/create', authenticateUser, async (req, res) => {
+  const { items, totalAmount, paymentId } = req.body; 
+  const userId = req.user.userId; 
+  
   try {
+    // Create the order
+    const newOrder = await Order.create({ userId, totalAmount, paymentId, status: 'Paid' });
+
+    // Add order items
+    const orderItems = items.map(item => ({
+      orderId: newOrder.orderId,
+      productId: item.product.id,
+      quantity: item.quantity,
+      price: item.product.price, 
+      size: item.size,
+    }));
+    await OrderItem.bulkCreate(orderItems);
+
+    // Clear the user's cart
+    await CartItem.destroy({ where: { cartId: userId } });
+
+    res.status(201).json({ orderId: newOrder.orderId });
+  } catch (error) {
+    console.error('Error creating order:', error);
+    res.status(500).json({ error: 'Failed to create order' });
+  }
+});
+
+app.get('/orders/:orderId', authenticateUser, async (req, res) => {
+  const { orderId } = req.params;
+  const userId = req.user.userId; // Assuming req.user.userId is set by your auth middleware
+
+  try {
+      // Fetch the order details and include items and product details
+      const order = await Order.findOne({
+          where: {
+              orderId,
+              userId, // Ensure the order belongs to the authenticated user
+          },
+          include: [
+              {
+                  model: OrderItem,
+                  as: 'items',
+                  include: [
+                      {
+                          model: Product,
+                          as: 'product',
+                          attributes: ['id','name', 'img', 'price'], // Include any necessary product attributes
+                      },
+                  ],
+              },
+          ],
+      });
+
+      if (!order) {
+          return res.status(404).json({ error: 'Order not found' });
+      }
+
+      res.json({
+          orderId: order.orderId,
+          status: order.status,
+          totalAmount: order.totalAmount,
+          items: order.items.map(item => ({
+              product: {
+                  name: item.product.name,
+                  img: item.product.img,
+              },
+              quantity: item.quantity,
+              price: item.price,
+              size: item.size,
+          })),
+      });
+  } catch (error) {
+      console.error('Error fetching order details:', error);
+      res.status(500).json({ error: 'An error occurred while fetching order details' });
+  }
+});
+
+app.get('/orders', authenticateUser, async (req, res) => {
+  const userId = req.user.userId;
+  try {
+    const orders = await Order.findAll({
+      where: { userId },
+      include: [{ model: OrderItem, as: 'items', include: ['product'] }],
+      order: [['createdAt', 'DESC']],
+    });
+    res.json(orders);
+  } catch (error) {
+    console.error('Error fetching orders:', error);
+    res.status(500).json({ error: 'Failed to fetch orders' });
+  }
+});
+
+app.post('/create-checkout-session', authenticateUser, async (req, res) => {
+  const { cartItems, totalAmount } = req.body;
+  const userId = req.user.userId;
+
+  try {
+    // Step 1: Create an order in the database
+    const newOrder = await Order.create({
+      userId,
+      totalAmount,
+      status: 'Pending',
+      paymentId: null,
+    });
+
+    // Step 2: Add items to the OrderItems table
+    const orderItemsData = cartItems.map(item => ({
+      orderId: newOrder.orderId,
+      productId: item.product.id,
+      quantity: item.quantity,
+      price: item.product.price,
+      size: item.size,
+    }));
+    await OrderItem.bulkCreate(orderItemsData);
+
+    // Step 3: Create a Stripe checkout session
     const session = await stripe.checkout.sessions.create({
       payment_method_types: ["card"],
-      line_items: cartItems.map(item=>({
-        price_data:{
+      line_items: cartItems.map(item => ({
+        price_data: {
           currency: 'usd',
-          product_data: {
-            name: item.product.name,
-          },
-          unit_amount: Math.round(item.product.price*100),
+          product_data: { name: item.product.name },
+          unit_amount: Math.round(item.product.price * 100),
         },
         quantity: item.quantity,
       })),
       mode: "payment",
-      success_url: `${req.headers.origin}/checkout-success`,
+      success_url: `${req.headers.origin}/order-summary/${newOrder.orderId}`, 
       cancel_url: `${req.headers.origin}/cart`,
-  });
-    res.send({url: session.url});
+    });
+    const userCart = await Cart.findOne({ where: { userId } });
+    if (userCart) {
+      await CartItem.destroy({ where: { cartId: userCart.cartId } });
+      console.log(`Cleared cart items for cartId: ${userCart.cartId}`);
+    } else {
+      console.error('No cart found for user');
+    }
+    res.send({ url: session.url });
   } catch (error) {
     console.error('Error creating checkout session:', error);
     res.status(500).json({ error: 'Failed to create checkout session' });
   }
 });
+
+
+
+
+// app.post('/create-checkout-session', async (req, res) => {
+//   const {cartItems} = req.body;
+//   try {
+//     const session = await stripe.checkout.sessions.create({
+//       payment_method_types: ["card"],
+//       line_items: cartItems.map(item=>({
+//         price_data:{
+//           currency: 'usd',
+//           product_data: {
+//             name: item.product.name,
+//           },
+//           unit_amount: Math.round(item.product.price*100),
+//         },
+//         quantity: item.quantity,
+//       })),
+//       mode: "payment",
+//       success_url: `${req.headers.origin}/checkout-success`,
+//       cancel_url: `${req.headers.origin}/cart`,
+//   });
+//     res.send({url: session.url});
+//   } catch (error) {
+//     console.error('Error creating checkout session:', error);
+//     res.status(500).json({ error: 'Failed to create checkout session' });
+//   }
+// });
 
 
 app.listen(PORT, ()=>console.log(`Server running on Port ${PORT}`));
