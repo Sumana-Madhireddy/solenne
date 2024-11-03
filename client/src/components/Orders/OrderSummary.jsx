@@ -30,15 +30,19 @@ const OrderSummary = () => {
             <p>Order ID: {order.orderId}</p>
             <p>Status: {order.status}</p>
             <p>Total: ${order.totalAmount}</p>
-            <ul className="mt-4">
+            <ul className="mt-4 space-y-4">
                 {order.items.map((item, index) => (
-                    <li key={index} className="flex items-center space-x-4">
-                        <img src={item.product.img} alt={item.product.name} className="w-24 h-24" />
-                        <div>
-                            <h2>{item.product.name}</h2>
+                    <li key={index} className="flex items-center justify-between border-b border-gray-300 pb-4">
+                        <div className="flex items-center space-x-4">
+                            <img src={item.product.img} alt={item.product.name} className="w-24 h-24 object-cover" />
+                            <div>
+                                <h2 className="text-lg font-semibold">{item.product.name}</h2>
+                                <p className="text-gray-600">Size: {item.size}</p>
+                            </div>
+                        </div>
+                        <div className="flex items-center space-x-4">
                             <p>Size: {item.size}</p>
-                            <p>Quantity: {item.quantity}</p>
-                            <p>Price: ${item.price}</p>
+                            <p className="text-lg">${item.price}</p>
                         </div>
                     </li>
                 ))}
