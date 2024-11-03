@@ -30,6 +30,7 @@ const Signup = ({ onSignup }) => {
         console.log('User signed up successfully');
         const data = await response.json();
         localStorage.setItem('authToken', data.token); 
+        localStorage.setItem('username',data.username);
         onSignup(); 
       } else {
         console.log('Signup failed');

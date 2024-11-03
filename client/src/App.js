@@ -9,6 +9,8 @@ import ProductDetail from './components/Products/Product/ProductDetail';
 import Cart from './components/Cart/Cart';
 import { CartProvider } from './components/Context/CartContext';
 import CheckoutSuccess from './components/Cart/CheckoutSuccess';
+import Account from './components/Account/Account';
+import Orders from './components/Orders/Orders';
 
 
 const App = () => {
@@ -16,6 +18,7 @@ const App = () => {
     const storedAuth = localStorage.getItem('isAuthenticated');
     return storedAuth === 'true';
   });
+  const [username, setUsername] = useState(localStorage.getItem('username') || '');
 
   useEffect(() => {
     localStorage.setItem('isAuthenticated', isAuthenticated);
@@ -23,22 +26,31 @@ const App = () => {
 
   const handleSignOut = () => {
     setIsAuthenticated(false);
+    setUsername('');
     localStorage.removeItem('isAuthenticated');
     localStorage.removeItem('authToken');
+    localStorage.removeItem('username');
   };
   console.log('isAuthenticated:', isAuthenticated);
+
   
   return (
     <CartProvider>
     <Router>
-      {isAuthenticated && <Header onSignOut={handleSignOut}/>}
+      {isAuthenticated && <Header onSignOut={handleSignOut} username={username} />}
       <Routes>
         {!isAuthenticated ? (
           <>
             <Route path="/" element={<Navigate to="/signin" />} />
             <Route path="/products" element={<Navigate to="/signin" />} />
-            <Route path="/signin" element={<Signin onSignIn={() => setIsAuthenticated(true)} />} />
-            <Route path="/signup" element={<Signup onSignup={() => setIsAuthenticated(true)} />} />
+            <Route path="/signin" element={<Signin onSignIn={() => {
+              setIsAuthenticated(true);
+              setUsername(localStorage.getItem('username') || '');
+            }} />} />
+            <Route path="/signup" element={<Signup onSignup={() => {
+              setIsAuthenticated(true);
+              setUsername(localStorage.getItem('username') || '');
+              }} />} />
             <Route path="/cart" element={<Navigate to="/signin" />} />
             <Route path="/checkout-success" element={<Navigate to="/signin" />} />
           </>
@@ -51,6 +63,8 @@ const App = () => {
             <Route path="/signup" element={<Navigate to="/products" />} />
             <Route path='/cart' element={<Cart/>}/>
             <Route path='/checkout-success' element={<CheckoutSuccess/>}/>
+            <Route path='/account' element={<Account/>}/>
+            <Route path='/orders' element={<Orders/>}/>
           </>
         )}
       </Routes>

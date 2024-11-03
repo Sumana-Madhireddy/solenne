@@ -29,7 +29,9 @@ const Signin = ({ onSignIn }) => {
       if (response.ok) {
         console.log('User signed in successfully');
         const data = await response.json();
+        console.log("Sign-in Response:", data); 
         localStorage.setItem('authToken', data.token); 
+        localStorage.setItem('username',data.username);
         onSignIn(); 
       } else if(response.status === 404){
         setErrorMessage('User not registered. Please sign up.');
