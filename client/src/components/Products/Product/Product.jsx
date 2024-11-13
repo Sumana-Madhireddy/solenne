@@ -15,7 +15,7 @@ const Product = ({product}) => {
             </div>
             <div className="flex flex-row justify-between items-center space-y-1">
                 <h5 className='hover:cursor-pointer'>{product.name}</h5>
-                <h5>{product.price}</h5>
+                <h5>${product.price}</h5>
             </div>
         </div>
     );

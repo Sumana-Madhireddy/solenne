@@ -21,7 +21,7 @@ export default (sequelize) => {
         allowNull: false,
       },
       thumbnails: {
-          type: DataTypes.ARRAY(DataTypes.STRING),
+          type: DataTypes.JSON,
           allowNull: true,
       },
       description: {
@@ -33,9 +33,26 @@ export default (sequelize) => {
         allowNull: false,
       },
       details: {
-        type: DataTypes.ARRAY(DataTypes.STRING),
+        type: DataTypes.JSON,
         allowNull: false
-      }
+      },
+
+      category: {
+        type: DataTypes.STRING,
+        allowNull: true,
+      },
+      material: {
+        type: DataTypes.STRING,
+        allowNull: true,
+      },
+      color: {
+        type: DataTypes.STRING,
+        allowNull: true,
+      },
+      gender: {
+        type: DataTypes.ENUM('male', 'female', 'unisex'),
+        allowNull: true,
+      },
     }, {
       sequelize,
       modelName: 'Product',

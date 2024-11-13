@@ -6,6 +6,7 @@ export const CartProvider = ({children}) => {
     const [cart,setCart] = useState({items: []});
     const [loading, setLoading] = useState(false);
     const token = localStorage.getItem('authToken');
+    console.log('token ',token);
     const refreshToken = localStorage.getItem('refreshToken');
 
     useEffect(()=>{
@@ -24,12 +25,10 @@ export const CartProvider = ({children}) => {
             });
             if (response.ok) {
                 const data = await response.json();
-                localStorage.setItem('authToken', data.accessToken); // Update access token
+                localStorage.setItem('authToken', data.accessToken); 
                 return data.accessToken;
             } else {
-                // If refresh token fails, redirect to login
                 console.error('Refresh token expired. Please log in again.');
-                // Clear tokens and redirect to login if needed
             }
         } catch (error) {
             console.error('Error refreshing access token:', error);

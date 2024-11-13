@@ -12,6 +12,8 @@ import CheckoutSuccess from './components/Cart/CheckoutSuccess';
 import Account from './components/Account/Account';
 import Orders from './components/Orders/Orders';
 import OrderSummary from './components/Orders/OrderSummary';
+import AddProduct from './components/Admin/AddProduct';
+import ProductList from './components/Admin/ProductList';
 
 
 const App = () => {
@@ -66,6 +68,8 @@ const App = () => {
             <Route path='/account' element={<Account/>}/>
             <Route path='/orders' element={<Orders/>}/>
             <Route path="/order-summary/:orderId" element={<OrderSummary />} />
+            <Route path='/admin/add-product' element={<AddProduct/>}/>
+            <Route path='/admin/product-list' element={<ProductList/>}/>
           </>
         )}
       </Routes>

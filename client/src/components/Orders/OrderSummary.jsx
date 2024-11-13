@@ -10,13 +10,13 @@ const OrderSummary = () => {
         const fetchOrderDetails = async () => {
             try {
                 const response = await fetch(`http://localhost:5000/orders/${orderId}`, {
-                    headers: { 'Authorization': `Bearer ${localStorage.getItem('authToken')}` }
+                    headers: {'Authorization': `Bearer ${localStorage.getItem('authToken')}`}
                 });
                 const data = await response.json();
                 setOrder(data);
             } catch (error) {
                 console.error('Error fetching order details:', error);
-                navigate('/'); // Redirect if error
+                navigate('/'); 
             }
         };
         fetchOrderDetails();

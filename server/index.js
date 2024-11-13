@@ -36,6 +36,22 @@ const authenticateUser = (req, res, next) => {
   }
 };
 
+// const authenticateUser = (req, res, next) => {
+//   const token = req.headers.authorization?.split(' ')[1];
+//   if (!token) {
+//     console.log('Authorization header missing or improperly formatted');
+//     return res.status(401).json({ error: 'Unauthorized' });
+//   }
+//   try {
+//     const decoded = jwt.verify(token, process.env.JWT_SECRET);
+//     req.user = decoded; // Attach decoded user info to the request
+//     next();
+//   } catch (error) {
+//     console.log('Token verification failed:', error.message);
+//     res.status(401).json({ error: 'Invalid token' });
+//   }
+// };
+
 app.post('/refresh-token', async (req, res) => {
   const { refreshToken } = req.body;
   if (!refreshToken) return res.status(401).json({ error: 'Unauthorized' });
@@ -397,6 +413,22 @@ app.post('/create-checkout-session', authenticateUser, async (req, res) => {
   } catch (error) {
     console.error('Error creating checkout session:', error);
     res.status(500).json({ error: 'Failed to create checkout session' });
+  }
+});
+
+// Admin apis 
+
+app.post('/add-product',authenticateUser, async (req, res) => {
+  try {
+    const {name, img, thumbnails, description, price, details, category, material, color, gender} = req.body;
+    if (!name || !img || !description || !price || !details) {
+      return res.status(400).json({ error: 'Missing required fields' });
+    }
+    const newProduct = await Product.create({name, img, thumbnails, description, price, details, category, material, color, gender});
+    res.status(201).json(newProduct);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+    console.error('Error creating product:', error);
   }
 });
 
