@@ -8,6 +8,7 @@ import cors from 'cors';
 import path from 'path';
 import { fileURLToPath } from 'url';
 import Stripe from 'stripe';
+import { group } from 'console';
 
 dotenv.config();
 const { User, Product, Cart, CartItem, Order, OrderItem } = db;
@@ -29,28 +30,12 @@ const authenticateUser = (req, res, next) => {
   if (!token) return res.status(401).json({ error: 'Unauthorized' });
   try {
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
-    req.user = decoded; // Contains userId
+    req.user = decoded; 
     next();
   } catch (error) {
     res.status(401).json({ error: 'Invalid token' });
   }
 };
-
-// const authenticateUser = (req, res, next) => {
-//   const token = req.headers.authorization?.split(' ')[1];
-//   if (!token) {
-//     console.log('Authorization header missing or improperly formatted');
-//     return res.status(401).json({ error: 'Unauthorized' });
-//   }
-//   try {
-//     const decoded = jwt.verify(token, process.env.JWT_SECRET);
-//     req.user = decoded; // Attach decoded user info to the request
-//     next();
-//   } catch (error) {
-//     console.log('Token verification failed:', error.message);
-//     res.status(401).json({ error: 'Invalid token' });
-//   }
-// };
 
 app.post('/refresh-token', async (req, res) => {
   const { refreshToken } = req.body;
@@ -72,18 +57,26 @@ app.post('/refresh-token', async (req, res) => {
 
 
 const saltRounds = 10;
-app.post('/signup', async (req,res) => {
-    const {username, email, password } = req.body;
-    if (!password) {
-        return res.status(400).json({ error: 'Password is required' });
-    }
-    const hashedPassword = await bcrypt.hash(password,saltRounds);
-    try {
-        const user = await User.create({username, email, password: hashedPassword});
-        res.status(201).json(user);
-    } catch (error) {
-        res.status(400).json({ error: 'Error creating user' });
-    }
+app.post('/signup', async (req, res) => {
+  const { firstName, lastName, email, password } = req.body;
+  if (!firstName || !lastName || !email || !password) {
+      return res.status(400).json({ error: 'All fields are required' });
+  }
+
+  const hashedPassword = await bcrypt.hash(password, saltRounds);
+  try {
+      const user = await User.create({
+        firstName: firstName, 
+        lastName: lastName,   
+        email,
+        password: hashedPassword,
+        role: 'user',
+      });
+      res.status(201).json(user);
+  } catch (error) {
+      console.error(error); 
+      res.status(400).json({ error: 'Error creating user' });
+  }
 });
 
 app.post('/signin', async (req, res) => {
@@ -100,11 +93,9 @@ app.post('/signin', async (req, res) => {
       if (!isMatch) {
         return res.status(400).json({ error: 'Invalid credentials' });
       }
-      // const token = jwt.sign({ userId: user.id }, process.env.JWT_SECRET, { expiresIn: '1h' });
       const accessToken = jwt.sign({ userId: user.id }, process.env.JWT_SECRET, { expiresIn: process.env.ACCESS_TOKEN_EXPIRY });
       const refreshToken = jwt.sign({ userId: user.id }, process.env.REFRESH_TOKEN_SECRET, { expiresIn: process.env.REFRESH_TOKEN_EXPIRY });
-      res.json({ accessToken, refreshToken, username: user.username });
-      // res.json({ token,username: user.username });
+      res.json({ accessToken, refreshToken, firstName: user.firstName, lastName: user.lastName, role: user.role });
     } catch (error) {
       res.status(500).json({ error: 'Error during sign in' });
     }
@@ -113,7 +104,6 @@ app.post('/signin', async (req, res) => {
 app.get('/products',async (req,res)=>{
     try {
         const products = await Product.findAll();
-        // console.log("products -- ",products);
         res.json(products);
     } catch (error) {
         console.error('Error fetching products:', error);
@@ -364,6 +354,7 @@ app.get('/orders', authenticateUser, async (req, res) => {
   }
 });
 
+
 app.post('/create-checkout-session', authenticateUser, async (req, res) => {
   const { cartItems, totalAmount } = req.body;
   const userId = req.user.userId;
@@ -417,7 +408,6 @@ app.post('/create-checkout-session', authenticateUser, async (req, res) => {
 });
 
 // Admin apis 
-
 app.post('/add-product',authenticateUser, async (req, res) => {
   try {
     const {name, img, thumbnails, description, price, details, category, material, color, gender} = req.body;
@@ -432,34 +422,74 @@ app.post('/add-product',authenticateUser, async (req, res) => {
   }
 });
 
+app.get('/all-orders', authenticateUser, async (req, res) => {
+  try {
+    const orders = await Order.findAll({
+      include: [{ model: OrderItem, as: 'items', include: ['product'] }],
+      order: [['createdAt', 'DESC']],
+    });
+    res.json(orders);
+  } catch (error) {
+    console.error('Error fetching orders:', error);
+    res.status(500).json({ error: 'Failed to fetch orders' });
+  }
+});
+
+app.get('/admin/order-items', authenticateUser, async (req, res) => {
+  try {
+    const orderItems = await OrderItem.findAll({
+      attributes: [
+        'productId', 
+        [db.sequelize.fn('SUM', db.sequelize.col('quantity')), 'totalQuantity'],
+        [
+          db.sequelize.fn('SUM', 
+            db.sequelize.literal('quantity * "OrderItem"."price"')
+          ),
+          'totalRevenue'
+        ],
+        // Adding the product name as an attribute
+        [db.sequelize.col('product.name'), 'productName'],
+        [db.sequelize.col('product.category'), 'productCategory'],
+        [db.sequelize.col('product.material'), 'productMaterial'],
+        [db.sequelize.col('product.color'), 'productColor'],
+        [db.sequelize.col('product.gender'), 'productGender'],
+      ],
+      group: [
+        'OrderItem.productId', 
+        'product.name', 
+        'product.category', 
+        'product.material', 
+        'product.color', 
+        'product.gender'
+      ], // Grouping by all relevant columns
+      include: [{
+        model: Product, 
+        as: 'product', 
+        attributes: ['name', 'category', 'material', 'color', 'gender']
+      }],
+      raw: true,
+      logging: console.log, // This will log the SQL query to the console
+    });
+
+    const result = orderItems.map(item => ({
+      productId: item.productId,
+      productName: item.productName,
+      productCategory: item.productCategory,
+      productMaterial: item.productMaterial,
+      productColor: item.productColor,
+      productGender: item.productGender,
+      totalQuantity: item.totalQuantity,
+      totalRevenue: item.totalRevenue,
+    }));
+
+    res.json(result);
+  } catch (error) {
+    console.error('Error fetching order items:', error);
+    res.status(500).json({ error: 'Failed to fetch order items' });
+  }
+});
 
 
-
-// app.post('/create-checkout-session', async (req, res) => {
-//   const {cartItems} = req.body;
-//   try {
-//     const session = await stripe.checkout.sessions.create({
-//       payment_method_types: ["card"],
-//       line_items: cartItems.map(item=>({
-//         price_data:{
-//           currency: 'usd',
-//           product_data: {
-//             name: item.product.name,
-//           },
-//           unit_amount: Math.round(item.product.price*100),
-//         },
-//         quantity: item.quantity,
-//       })),
-//       mode: "payment",
-//       success_url: `${req.headers.origin}/checkout-success`,
-//       cancel_url: `${req.headers.origin}/cart`,
-//   });
-//     res.send({url: session.url});
-//   } catch (error) {
-//     console.error('Error creating checkout session:', error);
-//     res.status(500).json({ error: 'Failed to create checkout session' });
-//   }
-// });
 
 
 app.listen(PORT, ()=>console.log(`Server running on Port ${PORT}`));

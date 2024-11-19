@@ -1,8 +1,10 @@
 import React, { useState } from 'react';
 
 const Signup = ({ onSignup }) => {
+  const [errorMessage, setErrorMessage] = useState('');
   const [formData, setFormData] = useState({
-    username: '',
+    firstName: '',
+    lastName: '',
     email: '',
     password: '',
   });
@@ -28,15 +30,19 @@ const Signup = ({ onSignup }) => {
 
       if (response.ok) {
         const data = await response.json();
-        localStorage.setItem('authToken', data.accessToken); 
-        localStorage.setItem('refreshToken', data.refreshToken); 
-        localStorage.setItem('username',data.username);
+        console.log('data signup ',data);
+        // localStorage.setItem('authToken', data.accessToken); 
+        // localStorage.setItem('refreshToken', data.refreshToken); 
+        localStorage.setItem('firstName',data.firstName);
+        localStorage.setItem('lastName',data.lastName);
         onSignup(); 
       } else {
         console.log('Signup failed');
+        setErrorMessage('An error occurred. Please try again.');
       }
     } catch (error) {
       console.error('Error during signup:', error);
+      setErrorMessage('An error occurred. Please try again.');
     }
   };
 
@@ -44,17 +50,37 @@ const Signup = ({ onSignup }) => {
     <div className="flex justify-center items-center h-screen bg-gray-100">
       <div className="w-full max-w-md bg-white p-6 rounded-lg shadow-md">
         <h2 className="text-2xl font-bold mb-6 text-center">Sign Up</h2>
+        {errorMessage && (
+          <div className="text-red-500 text-center mb-4">
+            {errorMessage}
+          </div>
+        )}
         <form onSubmit={handleSignup}>
           <div className="mb-4">
             <label className="block text-gray-700 font-bold mb-2" htmlFor="username">
-              Username
+              FirstName
             </label>
             <input
               type="text"
-              id="username"
-              name="username"
-              placeholder='Enter Username'
-              value={formData.username}
+              id="firstName"
+              name="firstName"
+              placeholder='Enter FirstName'
+              value={formData.firstName}
+              onChange={handleChange}
+              required
+              className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:border-indigo-500"
+            />
+          </div>
+          <div className="mb-4">
+            <label className="block text-gray-700 font-bold mb-2" htmlFor="username">
+              LastName
+            </label>
+            <input
+              type="text"
+              id="lastName"
+              name="lastName"
+              placeholder='Enter LastName'
+              value={formData.lastName}
               onChange={handleChange}
               required
               className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:border-indigo-500"

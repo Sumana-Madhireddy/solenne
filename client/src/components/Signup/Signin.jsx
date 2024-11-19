@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
 const Signin = ({ onSignIn }) => {
   const [formData, setFormData] = useState({
@@ -13,6 +14,10 @@ const Signin = ({ onSignIn }) => {
       ...formData,
       [name]: value,
     });
+  };
+  const navigate = useNavigate();
+  const handleNavigate = () => {
+      navigate(`/admin/dashboard`);
   };
 
   const handleSignin = async (e) => {
@@ -28,9 +33,17 @@ const Signin = ({ onSignIn }) => {
 
       if (response.ok) {
         const data = await response.json();
+        console.log('data sign in ', data);
         localStorage.setItem('authToken', data.accessToken); 
         localStorage.setItem('refreshToken', data.refreshToken); 
-        localStorage.setItem('username',data.username);
+        localStorage.setItem('firstName',data.firstName);
+        localStorage.setItem('lastName',data.lastName);
+        localStorage.setItem('role',data.role);
+        if (data.role === 'admin') {
+          navigate('/admin/dashboard'); 
+        } else {
+          navigate('/products'); 
+        }
         onSignIn(); 
       } else if(response.status === 404){
         setErrorMessage('User not registered. Please sign up.');

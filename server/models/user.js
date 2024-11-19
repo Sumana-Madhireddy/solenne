@@ -8,11 +8,6 @@ export default (sequelize) => {
   }
 
   User.init({
-    username: {
-      type: DataTypes.STRING,
-      allowNull: false,
-      unique: true,
-    },
     email: {
       type: DataTypes.STRING,
       allowNull: false,
@@ -21,6 +16,19 @@ export default (sequelize) => {
     password: {
       type: DataTypes.STRING,
       allowNull: false,
+    },
+    firstName: {
+      type: DataTypes.STRING,
+      allowNull: false,
+    },
+    lastName: {
+      type: DataTypes.STRING,
+      allowNull: false,
+    },
+    role: {
+      type: DataTypes.STRING,
+      allowNull: false,
+      defaultValue: 'user',
     },
   }, {
     sequelize,

@@ -2,7 +2,7 @@ import React from "react";
 import { useNavigate } from "react-router-dom";
 import ArrowDropDown  from '@mui/icons-material/ArrowDropDown';
 
-export const AccountDropDown = ({ onSignOut, username }) => {
+export const AccountDropDown = ({ onSignOut, firstName }) => {
     const navigate  = useNavigate();
     const handleSignOut = () => {
         onSignOut(); 
@@ -18,7 +18,7 @@ export const AccountDropDown = ({ onSignOut, username }) => {
 
     return (
         <div className="relative group inline-block">
-            <button className="text-gray-950 hover:text-black"> Hello, {username} <ArrowDropDown/></button>
+            <button className="text-gray-950 hover:text-black"> Hello, {firstName} <ArrowDropDown/></button>
             <div className="absolute hidden group-hover:flex flex-col bg-white border border-gray-200 rounded shadow-lg  z-10 w-32">
                 <button
                     onClick={handleAccountClick}

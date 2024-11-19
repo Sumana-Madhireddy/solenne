@@ -7,7 +7,7 @@ import { AccountDropDown } from "./AccountDropDown";
 const Header = ({ onSignOut }) => {
     const navigate = useNavigate();
     const {cart} = useContext(CartContext);
-    const username = localStorage.getItem('username');
+    const firstName = localStorage.getItem('firstName');
     const handleSignOut = () => {
         onSignOut(); 
         navigate('/signin'); 
@@ -31,7 +31,7 @@ const Header = ({ onSignOut }) => {
                 </ul>
             </div>
             <div className="flex items-center space-x-4">
-                <a className="hover:text-gray-500 font-heading"><AccountDropDown onSignOut={handleSignOut} username = {username}/></a>
+                <a className="hover:text-gray-500 font-heading"><AccountDropDown onSignOut={handleSignOut} firstName = {firstName}/></a>
                 <a onClick={handleCartClick} className="hover:text-gray-500 font-heading"><CartButton cartCount={cartCount} /></a>
             </div>
         </div>
