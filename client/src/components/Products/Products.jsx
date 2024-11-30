@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import Product from "./Product/Product";
 
 const Products = () => {
@@ -9,8 +9,9 @@ const Products = () => {
   const [error, setError] = useState(null);
 
   const location = useLocation();
+  const navigate = useNavigate();
   const queryParams = new URLSearchParams(location.search);
-  const selectedCategory = queryParams.get("category") || "All"; 
+  const selectedCategory = queryParams.get("category") || "All";
 
   useEffect(() => {
     const fetchProducts = async () => {
@@ -33,6 +34,10 @@ const Products = () => {
 
     fetchProducts();
   }, []);
+
+  const handleCategoryChange = (category) => {
+    navigate(`?category=${category}`);
+  };
 
   if (loading) {
     return <p>Loading products...</p>;
@@ -57,6 +62,7 @@ const Products = () => {
                 ? "bg-gradient-to-r from-teal-500 to-teal-700 text-white shadow-xl"
                 : "bg-gray-200 text-gray-700 hover:bg-teal-100 hover:text-teal-500 shadow-sm"
             } hover:scale-105 hover:shadow-lg`}
+            onClick={() => handleCategoryChange(category)}
           >
             {category}
           </button>
@@ -65,7 +71,7 @@ const Products = () => {
 
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 text-black m-10">
         {filteredProducts.map((product) => (
-          <div key={product.id} className="">
+          <div key={product.id}>
             <Product product={product} />
           </div>
         ))}
@@ -75,4 +81,3 @@ const Products = () => {
 };
 
 export default Products;
-
