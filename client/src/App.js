@@ -115,6 +115,7 @@ import Dashboard from './components/Admin/Dashboard';
 import AllOrders from './components/Admin/Orders';
 import ViewOrder from './components/Admin/ViewOrder';
 import AdminHeader from './components/Admin/AdminHeader';
+import HomePage from './components/HomePage/HomePage';
 
 
 const App = () => {
@@ -173,7 +174,7 @@ const App = () => {
           ) : (
             <>
               {/* <Route path="/" element={<Navigate to="/products" />} /> */}
-              <Route path="/" element={role === 'admin' ? <Navigate to="/admin/dashboard" /> : <Navigate to="/products" />} />
+              <Route path="/" element={role === 'admin' ? <Navigate to="/admin/dashboard" /> : <HomePage />} />
               <Route path="/products" element={<Products />} />
               <Route path="/product-detail/:id" element={<ProductDetail />} />
               <Route path='/cart' element={<ProtectedUserRoute element={<Cart />} />} />
@@ -183,6 +184,9 @@ const App = () => {
               <Route path="/order-summary/:orderId" element={<ProtectedUserRoute element={<OrderSummary />} />} />
               <Route path="/signin" element={<Navigate to="/products" />} />
               <Route path="/signup" element={<Navigate to="/products" />} />
+              <Route path="/" element={<HomePage />} />
+              <Route path="/shop" element={<Navigate to="/products" />} />
+
 
               {/* Admin-only routes */}
               <Route path='/admin/dashboard' element={<ProtectedAdminRoute element={<Dashboard onSignOut={handleSignOut} firstName={firstName}/>} />} />
