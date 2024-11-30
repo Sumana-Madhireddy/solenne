@@ -8,10 +8,7 @@ function HomePage() {
   const [categories, setCategories] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const handleClickCategory = (category) => {
-    navigate(`/products?category=${category}`);
-  };
-
+ 
   useEffect(() => {
     const fetchProducts = async () => {
       try {
@@ -44,10 +41,15 @@ function HomePage() {
   const handleClick = () => {
     navigate("/shop");
   };
+  const handleClickCategory = (category) => {
+    navigate(`/products?category=${category}`);
+  };
+  const handleNavigateToProduct = (id) => {
+    navigate(`/product-detail/${id}`);
+  };
 
   return (
-    <div className="font-sans bg-gray-50 text-gray-800">
-      {/* Hero Section */}
+    <div className="font-sans bg-gray-50 text-gray-800 mt-20">
       <section className="relative bg-gray-700 text-white ">
         <div className="w-full mx-auto px-6 py-16 text-center relative z-10">
           <h1 className="text-4xl md:text-6xl font-bold mb-4">
@@ -70,7 +72,6 @@ function HomePage() {
         />
       </section>
 
-      {/* Featured Products */}
       <section className="py-16">
         <div className="container mx-auto px-6 text-center">
           <h2 className="text-3xl md:text-4xl font-brand font-bold mb-8">
@@ -94,7 +95,7 @@ function HomePage() {
                   ${product.price}
                 </p>
                 <button
-                  onClick={handleClick}
+                  onClick={() => handleNavigateToProduct(product.id)}
                   className="mt-4 px-4 py-2 font-brand bg-teal-500 hover:bg-teal-600 text-white rounded-lg font-semibold transition-transform transform hover:scale-105 shadow-lg hover:shadow-xl"
                 >
                   Buy Now
@@ -105,7 +106,6 @@ function HomePage() {
         </div>
       </section>
 
-      {/* Categories */}
       <section className="bg-gray-100 py-16">
         <div className="container mx-auto px-6 text-center">
           <h2 className="text-3xl font-brand md:text-4xl font-bold mb-8">
@@ -131,37 +131,6 @@ function HomePage() {
           </div>
         </div>
       </section>
-
-      {/* Testimonials */}
-      {/* <section className="py-16">
-        <div className="container mx-auto px-6 text-center">
-          <h2 className="text-3xl md:text-4xl font-bold mb-8">
-            What Our Customers Say
-          </h2>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            {["Customer 1", "Customer 2", "Customer 3"].map(
-              (customer, index) => (
-                <div
-                  key={index}
-                  className="p-6 border rounded-lg shadow hover:shadow-lg transition"
-                >
-                  <p className="italic">
-                    "This is the best shopping experience I've had!"
-                  </p>
-                  <p className="mt-4 font-semibold">- {customer}</p>
-                </div>
-              )
-            )}
-          </div>
-        </div>
-      </section> */}
-
-      {/* Footer */}
-      <footer className="bg-gray-800 text-white py-8">
-        <div className="container mx-auto px-6 text-center">
-          <p>&copy; 2024 Solenne. All rights reserved.</p>
-        </div>
-      </footer>
     </div>
   );
 }

@@ -116,6 +116,9 @@ import AllOrders from './components/Admin/Orders';
 import ViewOrder from './components/Admin/ViewOrder';
 import AdminHeader from './components/Admin/AdminHeader';
 import HomePage from './components/HomePage/HomePage';
+import About from './components/About/About';
+import Contact from './components/Contact/Contact';
+import Footer from './components/Footer/Footer';
 
 
 const App = () => {
@@ -186,6 +189,8 @@ const App = () => {
               <Route path="/signup" element={<Navigate to="/products" />} />
               <Route path="/" element={<HomePage />} />
               <Route path="/shop" element={<Navigate to="/products" />} />
+              <Route path="/About" element={<About />} />
+              <Route path="/Contact" element={<Contact />} />
 
 
               {/* Admin-only routes */}
@@ -197,6 +202,7 @@ const App = () => {
             </>
           )}
         </Routes>
+        <Footer/>
       </>
     );
   };
