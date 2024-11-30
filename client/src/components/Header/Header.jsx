@@ -74,7 +74,7 @@ const Header = ({ onSignOut }) => {
 
                 <div className="hidden font-heading md:flex space-x-6 items-center">
                     <a href="/Shop" className="text-gray-700 hover:text-teal-500 transition duration-300">Shop</a>
-                    <a href="/Sale" className="text-gray-700 hover:text-teal-500 transition duration-300">Sale</a>
+                    {/* <a href="/Sale" className="text-gray-700 hover:text-teal-500 transition duration-300">Sale</a> */}
                     <a href="/About" className="text-gray-700 hover:text-teal-500 transition duration-300">About</a>
                     <a href="/Contact" className="text-gray-700 hover:text-teal-500 transition duration-300">Contact</a>
                 </div>

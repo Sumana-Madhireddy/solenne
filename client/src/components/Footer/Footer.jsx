@@ -2,7 +2,7 @@ import React from 'react';
 
 function Footer() {
   return (
-    <footer className="bg-gradient-to-r from-teal-600 to-teal-800 text-white py-4">
+    <footer className="bg-gradient-to-r from-teal-600 to-teal-800 text-white py-4 mt-auto">
       <div className="w-full mx-auto px-6">
         {/* Footer Top Section */}
         <div className="flex flex-wrap justify-between pl-12 mb-4">

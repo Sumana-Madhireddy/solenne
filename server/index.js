@@ -95,7 +95,7 @@ app.post('/signin', async (req, res) => {
       }
       const accessToken = jwt.sign({ userId: user.id }, process.env.JWT_SECRET, { expiresIn: process.env.ACCESS_TOKEN_EXPIRY });
       const refreshToken = jwt.sign({ userId: user.id }, process.env.REFRESH_TOKEN_SECRET, { expiresIn: process.env.REFRESH_TOKEN_EXPIRY });
-      res.json({ accessToken, refreshToken, firstName: user.firstName, lastName: user.lastName, role: user.role });
+      res.json({ accessToken, refreshToken, firstName: user.firstName, lastName: user.lastName, role: user.role, email: user.email });
     } catch (error) {
       res.status(500).json({ error: 'Error during sign in' });
     }

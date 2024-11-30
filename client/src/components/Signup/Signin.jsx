@@ -39,6 +39,7 @@ const Signin = ({ onSignIn }) => {
         localStorage.setItem('firstName',data.firstName);
         localStorage.setItem('lastName',data.lastName);
         localStorage.setItem('role',data.role);
+        localStorage.setItem('email',data.email);
         if (data.role === 'admin') {
           navigate('/admin/dashboard'); 
         } else {
