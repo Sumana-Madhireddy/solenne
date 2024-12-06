@@ -11,7 +11,7 @@ import Stripe from 'stripe';
 import { group } from 'console';
 
 dotenv.config();
-const { User, Product, Cart, CartItem, Order, OrderItem } = db;
+const { User, Product, Cart, CartItem, Order, OrderItem, Message } = db;
 const app = express();
 const PORT = process.env.PORT || 5000;
 app.use(bodyParser.json());
@@ -407,6 +407,22 @@ app.post('/create-checkout-session', authenticateUser, async (req, res) => {
   }
 });
 
+app.post('/api/messages', async (req, res) => {
+  const { name, email, message } = req.body;
+
+  try {
+      const newMessage = await Message.create({
+          name,
+          email,
+          message,
+      });
+
+      res.status(201).json({ success: true, message: 'Message saved', data: newMessage });
+  } catch (error) {
+      res.status(500).json({ success: false, error: 'Failed to save message', details: error.message });
+  }
+});
+
 // Admin apis 
 app.post('/add-product',authenticateUser, async (req, res) => {
   try {
@@ -488,6 +504,8 @@ app.get('/admin/order-items', authenticateUser, async (req, res) => {
     res.status(500).json({ error: 'Failed to fetch order items' });
   }
 });
+
+
 
 
 

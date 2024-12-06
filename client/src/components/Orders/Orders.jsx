@@ -52,7 +52,7 @@ const Orders = () => {
 
     return (
         <div className="container mx-auto p-6">
-            <h1 className="text-3xl font-heading font-semibold mb-4">Your Orders</h1>
+            <h1 className="text-3xl text-teal-700 font-heading font-semibold mb-4">Your Orders</h1>
             {orders.length === 0 ? (
                 <p>No orders found.</p>
             ) : (
@@ -78,7 +78,7 @@ const Orders = () => {
                                 ))}
                                 <div className='flex justify-between'>
                                     <p className="text-xl mb-2">Status: {order.status}</p>
-                                    <p onClick={() =>handleNavigateToOrderSummary(order.orderId)} className="text-xl underline hover:cursor-pointer">Order Summary</p>
+                                    <p onClick={() =>handleNavigateToOrderSummary(order.orderId)} className="text-xl underline  hover:text-teal-700 hover:cursor-pointer">Order Summary</p>
                                     <p className="text-xl mb-2">Total: ${order.totalAmount}</p>
                                 </div>
                             </ul>
@@ -86,7 +86,7 @@ const Orders = () => {
                     ))}
                 </div>
             )}
-            <button onClick={() => navigate('/')} className="bg-gray-800 text-white px-4 py-2 rounded mt-4">Continue Shopping</button>
+            <button onClick={() => navigate('/')} className=" bg-teal-600 hover:bg-teal-700 font-semibold text-white px-4 py-2 rounded mt-4">Continue Shopping</button>
         </div>
     );
 };

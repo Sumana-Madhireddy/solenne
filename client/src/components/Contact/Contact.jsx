@@ -1,6 +1,29 @@
-import React from 'react';
+import React, { useState } from 'react';
 
 function Contact() {
+  const [formData, setFormData] = useState({ name: '', email: '', message: '' });
+  const [responseMessage, setResponseMessage] = useState('');
+
+  const handleChange = (e) => {
+    setFormData({ ...formData, [e.target.name]: e.target.value });
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      const response = await fetch('http://localhost:5000/api/messages', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(formData),
+      });
+      const data = await response.text();
+      setResponseMessage(data);
+      setFormData({ name: '', email: '', message: '' }); 
+    } catch (error) {
+      setResponseMessage('Failed to send message. Try again later.');
+    }
+  };
+
   return (
     <section className= "text-black pb-16">
       <div className="container mx-auto px-6 text-center">
@@ -12,25 +35,37 @@ function Contact() {
         <div className="flex flex-col md:flex-row justify-center space-y-8 md:space-y-0 md:space-x-12">
           <div className="w-full md:w-1/2 bg-white p-8 rounded-xl shadow-lg">
             <h3 className="text-2xl font-semibold text-teal-500 mb-4">Send Us a Message</h3>
-            <form>
+            <form onSubmit={handleSubmit}>
               <div className="mb-4">
                 <input
                   type="text"
+                  name="name"
+                  value={formData.name}
+                  onChange={handleChange}
                   placeholder="Your Name"
+                  required
                   className="w-full p-3 rounded-md border-2 border-teal-300 focus:outline-none focus:border-teal-500 transition"
                 />
               </div>
               <div className="mb-4">
                 <input
                   type="email"
+                  name="email"
+                  value={formData.email}
+                  onChange={handleChange}
                   placeholder="Your Email"
+                  required
                   className="w-full p-3 rounded-md border-2 border-teal-300 focus:outline-none focus:border-teal-500 transition"
                 />
               </div>
               <div className="mb-4">
                 <textarea
+                  name="message"
+                  value={formData.message}
+                  onChange={handleChange}
                   placeholder="Your Message"
                   rows="4"
+                  required
                   className="w-full p-3 rounded-md border-2 border-teal-300 focus:outline-none focus:border-teal-500 transition"
                 ></textarea>
               </div>

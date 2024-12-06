@@ -1,6 +1,13 @@
 import React from 'react';
+import { useNavigate } from "react-router-dom";
 
 function About() {
+  const navigate = useNavigate();
+  const handleClick = () => {
+    navigate("/shop");
+  };
+
+
   return (
     <section className=" text-black pb-16">
       <div className="container mx-auto px-6 text-center">
@@ -35,7 +42,7 @@ function About() {
 
         <div className="mt-12">
           <p className="text-xl font-semibold">Join the Solenne family today and experience shopping like never before!</p>
-          <button className="mt-4 px-6 py-3 bg-teal-500 hover:bg-teal-600 text-white rounded-lg font-semibold transition-all duration-300 transform hover:scale-105">
+          <button onClick={handleClick} className="mt-4 px-6 py-3 bg-teal-500 hover:bg-teal-600 text-white rounded-lg font-semibold transition-all duration-300 transform hover:scale-105">
             Start Shopping
           </button>
         </div>

@@ -313,7 +313,7 @@ const Account = () => {
             </h2>
             <p className="text-sm text-gray-600 mt-2">{email}</p>
           </div>
-          <div className="mt-6">
+          {/* <div className="mt-6">
             <input
               type="file"
               accept="image/*"
@@ -326,15 +326,15 @@ const Account = () => {
             >
               Upload Image
             </button>
-          </div>
-          <div className="mt-4 space-y-4">
+          </div> */}
+          {/* <div className="mt-4 space-y-4">
             <button className="w-full bg-teal-600 hover:bg-teal-700 text-white py-2 rounded-md transition duration-300">
               Edit Profile
             </button>
             <button className="w-full bg-gray-700 hover:bg-gray-600 text-white py-2 rounded-md transition duration-300">
               Change Password
             </button>
-          </div>
+          </div> */}
         </div>
 
         {/* Account Information Section */}

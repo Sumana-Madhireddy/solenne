@@ -26,8 +26,8 @@ const OrderSummary = () => {
 
     return (
         <div className="container mx-auto p-6">
-            <h1 className="text-3xl font-semibold mb-4">Order Summary</h1>
-            <p>Order ID: {order.orderId}</p>
+            <h1 className="text-3xl text-teal-700 font-semibold mb-4">Order Summary</h1>
+            <p>#Order ID: {order.orderId}</p>
             <p>Status: {order.status}</p>
             <p>Total: ${order.totalAmount}</p>
             <ul className="mt-4 space-y-4">
@@ -47,7 +47,7 @@ const OrderSummary = () => {
                     </li>
                 ))}
             </ul>
-            <button onClick={() => navigate('/')} className="bg-gray-800 text-white px-4 py-2 rounded mt-4">Continue Shopping</button>
+            <button onClick={() => navigate('/')} className="bg-teal-600 hover:bg-teal-700 font-semibold text-white px-4 py-2 rounded mt-4">Continue Shopping</button>
         </div>
     );
 };

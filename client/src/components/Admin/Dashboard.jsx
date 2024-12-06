@@ -1,5 +1,4 @@
 import React from "react";
-import { Pie, Line, Bar } from 'react-chartjs-2';
 import { Chart as ChartJS, ArcElement, CategoryScale, LinearScale, LineElement, BarElement, PointElement, Title, Tooltip, Legend } from 'chart.js';
 import OrdersPieChart from "./charts/OrdersPieChart";
 import TotalSalesOverview from "./charts/TotalSalesOverview";
