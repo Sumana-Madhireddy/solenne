@@ -113,7 +113,6 @@ For deploying the application to production, you can use services like Heroku, A
 
 3. Deploy the frontend and backend to your chosen platform.
 
-
 ## Contributing
 We welcome contributions! To contribute to the project:
 
