@@ -98,22 +98,22 @@ The frontend will be available at http://localhost:3000 and the backend API at h
 - **DELETE /api/admin/products/:id**: Delete a product (Admin only)
 
 ## Testing
-
 Run the tests with:
-
-```bash
-npm test
+    ```bash
+    npm test
 
 ## Deployment
-
 For deploying the application to production, you can use services like Heroku, AWS, or DigitalOcean.
 
-### 1. Build the frontend for production:
-```bash
-npm run build
+1. Build the frontend for production:
+  ```bash
+  npm run build
+  
+2. Configure your database for production.
+
+3. Deploy the frontend and backend to your chosen platform.
 
 ## Contributing
-
 We welcome contributions! To contribute to the project:
 
 1. Fork the repository.
