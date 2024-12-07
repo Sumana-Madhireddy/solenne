@@ -107,7 +107,7 @@ For deploying the application to production, you can use services like Heroku, A
 
 1. Build the frontend for production:
     ```bash
-      npm run build
+  npm run build
 2. Configure your database for production.
 
 3. Deploy the frontend and backend to your chosen platform.
