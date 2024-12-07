@@ -1,6 +1,6 @@
 import React, {useState, useEffect, useContext} from 'react';
 import { useNavigate } from 'react-router-dom';
-import { CartContext } from "../Context/CartContext";
+import { CartContext } from "../../Context/CartContext";
 
 const Orders = () => {
     const { refreshAccessToken } = useContext(CartContext);

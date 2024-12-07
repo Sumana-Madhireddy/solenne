@@ -1,6 +1,6 @@
 import React, { useState, useContext } from "react";
 import { useNavigate } from 'react-router-dom';
-import { CartContext } from "../Context/CartContext";
+import { CartContext } from "../../Context/CartContext";
 
 const AddProduct = () => {
     const navigate = useNavigate();
@@ -48,7 +48,6 @@ const AddProduct = () => {
                 body: JSON.stringify(productData),
               });
         
-              // If token is expired, refresh and retry
               if (response.status === 401) {
                 currentToken = await refreshAccessToken();
                 response = await fetch('http://localhost:5000/add-product', {
@@ -74,7 +73,7 @@ const AddProduct = () => {
     }
 
     return (
-        <div>
+        <div className="pb-10">
             <form onSubmit={handleSubmit} className="max-w-lg mx-auto bg-white p-8 shadow-md rounded-md space-y-4">
                 <h2 className="text-2xl font-semibold mb-4 text-center text-gray-800">Add Product</h2>
                 

@@ -40,11 +40,12 @@ const Signin = ({ onSignIn }) => {
         localStorage.setItem('lastName',data.lastName);
         localStorage.setItem('role',data.role);
         localStorage.setItem('email',data.email);
-        if (data.role === 'admin') {
-          navigate('/admin/dashboard'); 
-        } else {
-          navigate('/products'); 
-        }
+        // if (data.role === 'admin') {
+        //   navigate('/admin/dashboard'); 
+        // } else {
+        //   navigate('/products'); 
+        // }
+        navigate('/'); 
         onSignIn(); 
       } else if(response.status === 404){
         setErrorMessage('User not registered. Please sign up.');

@@ -47,7 +47,7 @@ export const CartProvider = ({children}) => {
             });
 
             if (response.status === 401) {
-                currentToken = await refreshAccessToken();  // Call your refresh function here
+                currentToken = await refreshAccessToken();  
                 if (currentToken) {
                     response = await fetch('http://localhost:5000/cart', {
                         headers: {
@@ -56,7 +56,6 @@ export const CartProvider = ({children}) => {
                         },
                     });
                 } else {
-                    // If refresh fails, handle logout or prompt user to re-authenticate
                     console.error('Session expired. Please log in again.');
                     return;
                 }
@@ -83,7 +82,6 @@ export const CartProvider = ({children}) => {
                 (item) => item.productId === productId && item.size === size
             );
             if (existingItem) {
-                // If the item exists, increase its quantity
                 const newQuantity = existingItem.quantity + quantity;
                 const response = await fetch(`http://localhost:5000/cart/update/${existingItem.cartItemId}`, {
                     method: 'PUT',
@@ -100,7 +98,6 @@ export const CartProvider = ({children}) => {
                     console.error('Failed to update item quantity in cart');
                 }
             } else {
-                // If the item does not exist, add it as a new item
                 const response = await fetch('http://localhost:5000/cart/add', {
                     method: 'POST',
                     headers: {
@@ -111,25 +108,11 @@ export const CartProvider = ({children}) => {
                 });
     
                 if (response.ok) {
-                    await getCartItems(); // Refresh the cart after adding
+                    await getCartItems(); 
                 } else {
                     console.error('Failed to add item to cart');
                 }
             }
-            // const response = await fetch('http://localhost:5000/cart/add',{
-            //     method: 'POST',
-            //     headers:  {
-            //         'Authorization': `Bearer ${token}`,
-            //         'Content-Type': 'application/json',
-            //     },
-            //     body: JSON.stringify({productId,quantity,size}),
-            // });
-            // console.log('addItemToCart response - ',response);
-            // if(response.ok) {
-            //     await getCartItems();
-            // } else {
-            //     console.error('Failed to add item to cart');
-            // }
         } catch (error) {
             console.error('Error adding item to cart:', error);
         } finally {

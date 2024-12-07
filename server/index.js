@@ -27,13 +27,16 @@ app.use('/assets', express.static(path.join(__dirname, 'assets')));
 
 const authenticateUser = (req, res, next) => {
   const token = req.headers.authorization?.split(' ')[1];
+  console.log("token",token);
   if (!token) return res.status(401).json({ error: 'Unauthorized' });
   try {
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
     req.user = decoded; 
     next();
+    console.log("auth");
   } catch (error) {
     res.status(401).json({ error: 'Invalid token' });
+    console.log("un auth");
   }
 };
 
@@ -207,24 +210,16 @@ app.delete('/cart/remove/:cartItemId', authenticateUser, async (req, res) => {
 app.put('/cart/update/:cartItemId', authenticateUser, async (req, res) => {
   const { cartItemId } = req.params;
   const { quantity } = req.body;
-
   if (quantity < 1) {
       return res.status(400).json({ error: 'Quantity must be at least 1' });
   }
-
   try {
-      // Find the cart item by ID and ensure it exists
       const cartItem = await CartItem.findOne({ where: { cartItemId } });
-
       if (!cartItem) {
           return res.status(404).json({ error: 'Cart item not found' });
       }
-
-      // Update the quantity of the cart item
       cartItem.quantity = quantity;
       await cartItem.save();
-
-      // Fetch the updated cart to return to the frontend
       const updatedCart = await Cart.findOne({
           where: { userId: req.user.userId },
           include: [{
@@ -463,7 +458,6 @@ app.get('/admin/order-items', authenticateUser, async (req, res) => {
           ),
           'totalRevenue'
         ],
-        // Adding the product name as an attribute
         [db.sequelize.col('product.name'), 'productName'],
         [db.sequelize.col('product.category'), 'productCategory'],
         [db.sequelize.col('product.material'), 'productMaterial'],
@@ -506,6 +500,77 @@ app.get('/admin/order-items', authenticateUser, async (req, res) => {
 });
 
 
+app.get('/admin/all-users', authenticateUser, async (req, res) => {
+  try {
+    const users = await User.findAll({
+      // include: [{ model: Cart, as: 'cart' }],
+      user: [['createdAt', 'DESC']],
+    });
+    res.json(users);
+  } catch (error) {
+    console.error('Error fetching users:', error);
+    res.status(500).json({ error: 'Failed to fetch users' });
+  }
+});
+
+app.put('/admin/edit-user/:id', authenticateUser, async (req, res) => {
+  const userId = parseInt(req.params.id, 10);
+  const { firstName, lastName, role, email } = req.body;
+
+  try {
+    const user = await User.findByPk(userId);
+    if (!user) {
+      return res.status(404).json({ error: 'User not found.' });
+    }
+    const updatedData = {};
+    if (firstName) updatedData.firstName = firstName;
+    if (lastName) updatedData.lastName = lastName;
+    if (role) updatedData.role = role;
+    if (email) updatedData.email = email;
+
+    await user.update(updatedData);
+    res.json({ message: 'User updated successfully.', user });
+  } catch (error) {
+    console.error('Error updating user:', error);
+    res.status(500).json({ error: 'Failed to update user.' });
+  }
+});
+
+app.put('/admin/edit-product/:id', authenticateUser, async (req, res) => {
+  const productId = parseInt(req.params.id, 10);
+  const { name, category, material, color, gender, price, details, img, thumbnails, description } = req.body;
+
+  try {
+    const product = await Product.findByPk(productId);
+    
+    if (!product) {
+      return res.status(404).json({ error: 'Product not found.' });
+    }
+    const updatedData = {};
+    if (name) updatedData.name = name;
+    if (category) updatedData.category = category;
+    if (material) updatedData.material = material;
+    if (color) updatedData.color = color;
+    if (gender) updatedData.gender = gender;
+    if (price) updatedData.price = price;
+
+    if (details) updatedData.details = Array.isArray(details) ? details : JSON.parse(details);
+    if (img) updatedData.img = img;
+    if (thumbnails) updatedData.thumbnails = Array.isArray(thumbnails) ? thumbnails : JSON.parse(thumbnails);
+    if (description) updatedData.description = description;
+
+    await product.update(updatedData);
+
+    res.json({ message: 'Product updated successfully.', product });
+  } catch (error) {
+    console.error('Error updating product:', error);
+
+    if (error.name === 'SequelizeValidationError') {
+      return res.status(400).json({ error: 'Validation failed.' });
+    }
+    res.status(500).json({ error: 'Failed to update product.' });
+  }
+});
 
 
 

@@ -4,6 +4,7 @@ import ArrowDropDown  from '@mui/icons-material/ArrowDropDown';
 
 export const AccountDropDown = ({ onSignOut, firstName }) => {
     const navigate  = useNavigate();
+    const role = localStorage.getItem('role');
     const handleSignOut = () => {
         onSignOut(); 
         navigate('/signin'); 
@@ -11,6 +12,9 @@ export const AccountDropDown = ({ onSignOut, firstName }) => {
     const handleAccountClick = () => {
         navigate('/account');
 
+    }
+    const handleDashboard= () => {
+        navigate('/admin/dashboard');
     }
     const handleOrders= () => {
         navigate('/orders');
@@ -26,6 +30,12 @@ export const AccountDropDown = ({ onSignOut, firstName }) => {
                 >
                     Account
                 </button>
+                {role === 'admin' && (<button
+                    onClick={handleDashboard}
+                    className="px-4 py-2 text-gray-700 hover:bg-gray-100 w-full text-left"
+                >
+                    Dashboard
+                </button>)}
                 <button
                     onClick={handleOrders}
                     className="px-4 py-2 text-gray-700 hover:bg-gray-100 w-full text-left"

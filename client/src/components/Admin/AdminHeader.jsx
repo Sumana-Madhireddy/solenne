@@ -19,7 +19,7 @@ const AdminHeader = ({ onSignOut }) => {
                     <li><a href="/admin/dashboard" className="hover:text-gray-500 font-heading">Dashboard</a></li>
                     <li><a href="/admin/product-list" className="hover:text-gray-500 font-heading">Products</a></li>
                     <li><a href="/admin/all-orders" className="hover:text-gray-500 font-heading">Orders</a></li>
-                    <li><a href="/admin/users" className="hover:text-gray-500 font-heading">Users</a></li>
+                    <li><a href="/admin/all-users" className="hover:text-gray-500 font-heading">Users</a></li>
                 </ul>
             </div>
             <div className="flex items-center space-x-4">
