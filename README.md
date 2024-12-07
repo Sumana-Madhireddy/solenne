@@ -106,12 +106,13 @@ Run the tests with:
 For deploying the application to production, you can use services like Heroku, AWS, or DigitalOcean.
 
 1. Build the frontend for production:
-  ```bash
-  npm run build
-  
+    ```bash
+    npm run build
+
 2. Configure your database for production.
 
 3. Deploy the frontend and backend to your chosen platform.
+
 
 ## Contributing
 We welcome contributions! To contribute to the project:
@@ -121,13 +122,11 @@ We welcome contributions! To contribute to the project:
 3. Write tests and ensure the code passes existing tests.
 4. Submit a pull request.
 
----
 
 ## License
 
 This project is licensed under the MIT License.
 
----
 
 ## Acknowledgements
 
