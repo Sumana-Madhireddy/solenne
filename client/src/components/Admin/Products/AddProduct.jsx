@@ -1,6 +1,7 @@
 import React, { useState, useContext } from "react";
 import { useNavigate } from 'react-router-dom';
 import { CartContext } from "../../Context/CartContext";
+import { API_ENDPOINT } from '../../../constants';
 
 const AddProduct = () => {
     const navigate = useNavigate();
@@ -39,7 +40,7 @@ const AddProduct = () => {
         let currentToken = localStorage.getItem('authToken');
         console.log('currentToken ',currentToken);
         try {
-            let response = await fetch('http://localhost:5000/add-product', {
+            let response = await fetch(`${API_ENDPOINT}/add-product`, {
                 method: 'POST',
                 headers: {
                   'Content-Type': 'application/json',
@@ -50,7 +51,7 @@ const AddProduct = () => {
         
               if (response.status === 401) {
                 currentToken = await refreshAccessToken();
-                response = await fetch('http://localhost:5000/add-product', {
+                response = await fetch(`${API_ENDPOINT}/add-product`, {
                   method: 'POST',
                   headers: {
                     'Content-Type': 'application/json',

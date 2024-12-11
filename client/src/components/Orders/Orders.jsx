@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
+import { API_ENDPOINT } from '../../constants';
 
 const Orders = () => {
     const navigate = useNavigate();
@@ -23,7 +24,7 @@ const Orders = () => {
         const fetchOrders = async () => {
             setLoading(true);
             try {
-                const response = await fetch('http://localhost:5000/orders', {
+                const response = await fetch(`${API_ENDPOINT}/orders`, {
                     headers: {
                         'Authorization': `Bearer ${token}`,
                         'Content-Type': 'application/json',

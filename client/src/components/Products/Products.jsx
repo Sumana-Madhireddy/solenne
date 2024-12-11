@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import Product from "./Product/Product";
+import { API_ENDPOINT } from "../../constants";
 
 const Products = () => {
   const [products, setProducts] = useState([]);
@@ -16,7 +17,7 @@ const Products = () => {
   useEffect(() => {
     const fetchProducts = async () => {
       try {
-        const response = await fetch("http://localhost:5000/products");
+        const response = await fetch(`${API_ENDPOINT}/products`);
         if (!response.ok) {
           throw new Error("Failed to fetch products");
         }

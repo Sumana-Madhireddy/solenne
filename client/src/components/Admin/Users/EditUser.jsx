@@ -2,6 +2,7 @@ import React, { useState, useEffect, useContext } from "react";
 import { CartContext } from "../../Context/CartContext";
 import { useParams } from "react-router-dom";
 import { toast } from 'react-toastify';
+import { API_ENDPOINT } from "../../../constants";
 
 function EditUser({ onSave }) {
     const { id } = useParams();  
@@ -18,7 +19,7 @@ function EditUser({ onSave }) {
         const editUser = async () => {
             let currentToken = localStorage.getItem('authToken');
             try {
-                let response = await fetch(`http://localhost:5000/admin/edit-user/${id}`, {
+                let response = await fetch(`${API_ENDPOINT}/admin/edit-user/${id}`, {
                     method: 'PUT',
                     headers: {
                         'Content-Type': 'application/json',
@@ -27,7 +28,7 @@ function EditUser({ onSave }) {
                 });
                 if (response.status === 401) {
                     currentToken = await refreshAccessToken();
-                    response = await fetch(`http://localhost:5000/admin/edit-user/${id}`, {
+                    response = await fetch(`${API_ENDPOINT}/admin/edit-user/${id}`, {
                         method: 'PUT',
                         headers: {
                             'Content-Type': 'application/json',
@@ -70,7 +71,7 @@ function EditUser({ onSave }) {
         if (formData.email !== user.email) updatedUser.email = formData.email;
 
         try {
-            let response = await fetch(`http://localhost:5000/admin/edit-user/${user.id}`, {
+            let response = await fetch(`${API_ENDPOINT}/admin/edit-user/${user.id}`, {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json',
@@ -80,7 +81,7 @@ function EditUser({ onSave }) {
             });
             if (response.status === 401) {
                 currentToken = await refreshAccessToken();
-                response = await fetch(`http://localhost:5000/admin/edit-user/${user.id}`, {
+                response = await fetch(`${API_ENDPOINT}/admin/edit-user/${user.id}`, {
                     method: 'PUT',
                     headers: {
                         'Content-Type': 'application/json',

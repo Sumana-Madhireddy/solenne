@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { CartContext } from '../../Context/CartContext';
 import { Pie } from 'react-chartjs-2';
 import { Chart as ChartJS, ArcElement, Tooltip, Legend } from 'chart.js';
+import { API_ENDPOINT } from '../../../constants';
 
 ChartJS.register(ArcElement, Tooltip, Legend);
 
@@ -16,7 +17,7 @@ const OrdersDonutChart = () => {
             let currentToken = localStorage.getItem('authToken');
             let response;
             try {
-                response = await fetch('http://localhost:5000/all-orders', {
+                response = await fetch(`${API_ENDPOINT}/all-orders`, {
                     headers: {
                         'Authorization': `Bearer ${currentToken}`,
                         'Content-Type': 'application/json',
@@ -25,7 +26,7 @@ const OrdersDonutChart = () => {
 
                 if (response.status === 401) {
                     currentToken = await refreshAccessToken();
-                    response = await fetch('http://localhost:5000/all-orders', {
+                    response = await fetch(`${API_ENDPOINT}/all-orders`, {
                         headers: {
                             'Authorization': `Bearer ${currentToken}`,
                             'Content-Type': 'application/json',

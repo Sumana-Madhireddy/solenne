@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
+import { API_ENDPOINT } from '../../constants';
 
 const Signin = ({ onSignIn }) => {
   const [formData, setFormData] = useState({
@@ -23,7 +24,7 @@ const Signin = ({ onSignIn }) => {
   const handleSignin = async (e) => {
     e.preventDefault();
     try {
-      const response = await fetch('http://localhost:5000/signin', {
+      const response = await fetch(`${API_ENDPOINT}/signin`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

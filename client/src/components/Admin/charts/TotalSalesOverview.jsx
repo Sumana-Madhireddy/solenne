@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { CartContext } from '../../Context/CartContext';
 import { Line } from 'react-chartjs-2';
 import { Chart as ChartJS, Title, Tooltip, Legend, CategoryScale, LinearScale, PointElement, LineElement } from 'chart.js';
+import { API_ENDPOINT } from '../../../constants';
 
 ChartJS.register(Title, Tooltip, Legend, CategoryScale, LinearScale, PointElement, LineElement);
 
@@ -16,7 +17,7 @@ const TotalSalesOverview = () => {
             let currentToken = localStorage.getItem('authToken');
             let response;
             try {
-                response = await fetch('http://localhost:5000/all-orders', {
+                response = await fetch(`${API_ENDPOINT}/all-orders`, {
                     headers: {
                         'Authorization': `Bearer ${currentToken}`,
                         'Content-Type': 'application/json',
@@ -25,7 +26,7 @@ const TotalSalesOverview = () => {
 
                 if (response.status === 401) {
                     currentToken = await refreshAccessToken();
-                    response = await fetch('http://localhost:5000/all-orders', {
+                    response = await fetch(`${API_ENDPOINT}/all-orders`, {
                         headers: {
                             'Authorization': `Bearer ${currentToken}`,
                             'Content-Type': 'application/json',

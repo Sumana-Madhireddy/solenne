@@ -1,5 +1,6 @@
 import React, {useContext} from "react";
 import { CartContext } from "../Context/CartContext";
+import { API_ENDPOINT } from "../../constants";
 
 const CheckoutButton = ({totalAmount}) => {
     const {cart, clearCart, getCartItems } = useContext(CartContext);
@@ -7,7 +8,7 @@ const CheckoutButton = ({totalAmount}) => {
 
     const handleCheckout = async () => {
         try {
-            const response  = await fetch('http://localhost:5000/create-checkout-session',{
+            const response  = await fetch(`${API_ENDPOINT}/create-checkout-session`,{
                 method: 'POST',
                 headers: {
                     'Authorization': `Bearer ${token}`, 
@@ -19,8 +20,6 @@ const CheckoutButton = ({totalAmount}) => {
             console.log("handleCheckout data - ", data);
             if (data.url){
                 window.location.href = data.url;
-                // clearCart();
-                // getCartItems();
 
             } else {
                 console.error('Failed to get a valid checkout URL');

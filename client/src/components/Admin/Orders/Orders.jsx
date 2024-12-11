@@ -1,6 +1,7 @@
 import React, {useState, useEffect, useContext} from 'react';
 import { useNavigate } from 'react-router-dom';
 import { CartContext } from "../../Context/CartContext";
+import { API_ENDPOINT } from '../../../constants';
 
 const Orders = () => {
     const { refreshAccessToken } = useContext(CartContext);
@@ -13,7 +14,7 @@ const Orders = () => {
     const fetchOrders = async () => {
         let currentToken = localStorage.getItem('authToken');
         try {
-            const response = await fetch('http://localhost:5000/all-orders',{
+            const response = await fetch(`${API_ENDPOINT}/all-orders`,{
                 headers: {
                     'Authorization': `Bearer ${currentToken}`,
                     'Content-Type': 'application/json',
@@ -21,7 +22,7 @@ const Orders = () => {
             }); 
             if (response.status === 401) {
                 currentToken = await refreshAccessToken();
-                response = await fetch('http://localhost:5000/all-orders',{
+                response = await fetch(`${API_ENDPOINT}/all-orders`,{
                     headers: {
                         'Authorization': `Bearer ${currentToken}`,
                         'Content-Type': 'application/json',

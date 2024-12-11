@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { API_ENDPOINT } from '../../constants';
 
 const Signup = ({ onSignup }) => {
   const [errorMessage, setErrorMessage] = useState('');
@@ -20,7 +21,7 @@ const Signup = ({ onSignup }) => {
   const handleSignup = async (e) => {
     e.preventDefault();
     try {
-      const response = await fetch('http://localhost:5000/signup', {
+      const response = await fetch(`${API_ENDPOINT}/signup`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

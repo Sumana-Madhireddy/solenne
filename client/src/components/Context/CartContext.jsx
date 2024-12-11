@@ -1,4 +1,5 @@
 import React, { createContext, useEffect, useState } from "react";
+import { API_ENDPOINT } from "../../constants";
 
 export const CartContext = createContext();
 
@@ -18,7 +19,7 @@ export const CartProvider = ({children}) => {
 
     const refreshAccessToken = async () => {
         try {
-            const response = await fetch('http://localhost:5000/refresh-token', {
+            const response = await fetch(`${API_ENDPOINT}/refresh-token`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ refreshToken }),
@@ -39,7 +40,7 @@ export const CartProvider = ({children}) => {
         setLoading(true);
         let currentToken = localStorage.getItem('authToken');
         try {
-            let response = await fetch('http://localhost:5000/cart',{
+            let response = await fetch(`${API_ENDPOINT}/cart`,{
                 headers: {
                     'Authorization': `Bearer ${token}`,
                     'Content-Type': 'application/json',
@@ -49,7 +50,7 @@ export const CartProvider = ({children}) => {
             if (response.status === 401) {
                 currentToken = await refreshAccessToken();  
                 if (currentToken) {
-                    response = await fetch('http://localhost:5000/cart', {
+                    response = await fetch(`${API_ENDPOINT}/cart`, {
                         headers: {
                             'Authorization': `Bearer ${currentToken}`,
                             'Content-Type': 'application/json',
@@ -83,7 +84,7 @@ export const CartProvider = ({children}) => {
             );
             if (existingItem) {
                 const newQuantity = existingItem.quantity + quantity;
-                const response = await fetch(`http://localhost:5000/cart/update/${existingItem.cartItemId}`, {
+                const response = await fetch(`${API_ENDPOINT}/cart/update/${existingItem.cartItemId}`, {
                     method: 'PUT',
                     headers: {
                         'Authorization': `Bearer ${token}`,
@@ -98,7 +99,7 @@ export const CartProvider = ({children}) => {
                     console.error('Failed to update item quantity in cart');
                 }
             } else {
-                const response = await fetch('http://localhost:5000/cart/add', {
+                const response = await fetch(`${API_ENDPOINT}/cart/add`, {
                     method: 'POST',
                     headers: {
                         'Authorization': `Bearer ${token}`,
@@ -123,7 +124,7 @@ export const CartProvider = ({children}) => {
     const removeItemFromCart = async (cartItemId) => {
         setLoading(true);
         try {
-          const response = await fetch(`http://localhost:5000/cart/remove/${cartItemId}`, {
+          const response = await fetch(`${API_ENDPOINT}/cart/remove/${cartItemId}`, {
             method: 'DELETE',
             headers: {
               'Authorization': `Bearer ${token}`,
@@ -148,7 +149,7 @@ export const CartProvider = ({children}) => {
     const increaseQuantity = async (cartItemId, currentQuantity) => {
         setLoading(true);
         try {
-            const response = await fetch(`http://localhost:5000/cart/update/${cartItemId}`, {
+            const response = await fetch(`${API_ENDPOINT}/cart/update/${cartItemId}`, {
                 method: 'PUT',
                 headers: {
                     'Authorization': `Bearer ${token}`,
@@ -176,7 +177,7 @@ export const CartProvider = ({children}) => {
         }
         setLoading(true);
         try {
-            const response = await fetch(`http://localhost:5000/cart/update/${cartItemId}`, {
+            const response = await fetch(`${API_ENDPOINT}/cart/update/${cartItemId}`, {
                 method: 'PUT',
                 headers: {
                     'Authorization': `Bearer ${token}`,
@@ -201,7 +202,7 @@ export const CartProvider = ({children}) => {
     const clearCart = async () => {
         setLoading(true);
         try {
-          const response = await fetch('http://localhost:5000/cart/clear', {
+          const response = await fetch(`${API_ENDPOINT}/cart/clear`, {
             method: 'DELETE',
             headers: {
               'Authorization': `Bearer ${token}`,

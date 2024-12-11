@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
+import { API_ENDPOINT } from '../../../constants';
 
 const OrderSummary = () => {
     const { orderId } = useParams();
@@ -9,7 +10,7 @@ const OrderSummary = () => {
     useEffect(() => {
         const fetchOrderDetails = async () => {
             try {
-                const response = await fetch(`http://localhost:5000/orders/${orderId}`, {
+                const response = await fetch(`${API_ENDPOINT}/orders/${orderId}`, {
                     headers: {'Authorization': `Bearer ${localStorage.getItem('authToken')}`}
                 });
                 const data = await response.json();
@@ -47,7 +48,7 @@ const OrderSummary = () => {
                     </li>
                 ))}
             </ul>
-            <button onClick={() => navigate('/admin/all-orders')} className="bg-gray-800 text-white px-4 py-2 rounded mt-4">Back to Orders</button>
+            <button onClick={() => navigate('/admin/all-orders')} className="bg-teal-600 hover:bg-teal-700 text-white px-4 py-2 rounded mt-4">Back to Orders</button>
         </div>
     );
 };

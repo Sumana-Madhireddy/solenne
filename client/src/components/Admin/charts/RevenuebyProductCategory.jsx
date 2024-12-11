@@ -2,6 +2,7 @@ import React, { useState, useEffect, useContext } from 'react';
 import { CartContext } from '../../Context/CartContext';
 import { Bar } from 'react-chartjs-2';
 import { Chart as ChartJS, CategoryScale, BarElement, Title, Tooltip, Legend } from 'chart.js';
+import { API_ENDPOINT } from '../../../constants';
 
 ChartJS.register(CategoryScale, BarElement, Title, Tooltip, Legend);
 
@@ -14,7 +15,7 @@ const RevenueByCategoryChart = () => {
             let currentToken = localStorage.getItem('authToken');
             let response;
             try {
-                response = await fetch('http://localhost:5000/admin/order-items', {
+                response = await fetch(`${API_ENDPOINT}/admin/order-items`, {
                     headers: {
                         'Authorization': `Bearer ${currentToken}`,
                         'Content-Type': 'application/json',
@@ -23,7 +24,7 @@ const RevenueByCategoryChart = () => {
 
                 if (response.status === 401) {
                     currentToken = await refreshAccessToken();
-                    response = await fetch('http://localhost:5000/admin/order-items', {
+                    response = await fetch(`${API_ENDPOINT}/admin/order-items`, {
                         headers: {
                             'Authorization': `Bearer ${currentToken}`,
                             'Content-Type': 'application/json',

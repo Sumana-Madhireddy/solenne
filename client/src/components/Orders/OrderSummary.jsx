@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
+import { API_ENDPOINT } from '../../constants';
 
 const OrderSummary = () => {
     const { orderId } = useParams();
@@ -9,7 +10,7 @@ const OrderSummary = () => {
     useEffect(() => {
         const fetchOrderDetails = async () => {
             try {
-                const response = await fetch(`http://localhost:5000/orders/${orderId}`, {
+                const response = await fetch(`${API_ENDPOINT}/orders/${orderId}`, {
                     headers: {'Authorization': `Bearer ${localStorage.getItem('authToken')}`}
                 });
                 const data = await response.json();

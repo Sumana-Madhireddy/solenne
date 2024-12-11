@@ -2,6 +2,7 @@ import React, { useState, useEffect, useContext } from "react";
 import { CartContext } from "../../Context/CartContext";
 import { useParams } from "react-router-dom";
 import { toast } from 'react-toastify';
+import { API_ENDPOINT } from '../../../constants';
 
 function EditProduct({ onSave }) {
     const { id } = useParams();
@@ -24,7 +25,7 @@ function EditProduct({ onSave }) {
         const fetchProduct = async () => {
             let currentToken = localStorage.getItem('authToken');
             try {
-                let response = await fetch(`http://localhost:5000/products/${id}`, {
+                let response = await fetch(`${API_ENDPOINT}/products/${id}`, {
                     method: 'GET',
                     headers: {
                         'Content-Type': 'application/json',
@@ -33,7 +34,7 @@ function EditProduct({ onSave }) {
                 });
                 if (response.status === 401) {
                     currentToken = await refreshAccessToken();
-                    response = await fetch(`http://localhost:5000/products/${id}`, {
+                    response = await fetch(`${API_ENDPOINT}/products/${id}`, {
                         method: 'GET',
                         headers: {
                             'Content-Type': 'application/json',
@@ -88,7 +89,7 @@ function EditProduct({ onSave }) {
         if (formData.gender !== product.gender) updatedProduct.gender = formData.gender;
 
         try {
-            let response = await fetch(`http://localhost:5000/admin/edit-product/${product.id}`, {
+            let response = await fetch(`${API_ENDPOINT}/admin/edit-product/${product.id}`, {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json',
@@ -98,7 +99,7 @@ function EditProduct({ onSave }) {
             });
             if (response.status === 401) {
                 currentToken = await refreshAccessToken();
-                response = await fetch(`http://localhost:5000/admin/edit-product/${product.id}`, {
+                response = await fetch(`${API_ENDPOINT}/admin/edit-product/${product.id}`, {
                     method: 'PUT',
                     headers: {
                         'Content-Type': 'application/json',

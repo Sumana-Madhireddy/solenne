@@ -2,6 +2,7 @@ import React,{ useContext, useEffect, useState, } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import ImageCarousel from "./ImageCarousel";
 import { CartContext } from "../../Context/CartContext";
+import { API_ENDPOINT } from "../../../constants";
 
 const ProductDetail = () => {
     const navigate = useNavigate();
@@ -35,7 +36,7 @@ const ProductDetail = () => {
     useEffect(() => {
         const fetchProductDetail = async () =>{
             try {
-                const response = await fetch(`http://localhost:5000/products/${id}`);
+                const response = await fetch(`${API_ENDPOINT}/products/${id}`);
                 if (!response.ok) {
                     throw new Error('Failed to fetch products');
                 }

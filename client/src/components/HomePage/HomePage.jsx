@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { images } from "../../constants";
+import {API_ENDPOINT} from "../../constants";
 
 function HomePage() {
   const navigate = useNavigate();
@@ -12,7 +13,7 @@ function HomePage() {
   useEffect(() => {
     const fetchProducts = async () => {
       try {
-        const response = await fetch("http://localhost:5000/products");
+        const response = await fetch(`${API_ENDPOINT}/products`);
         if (!response.ok) {
           throw new Error("Failed to fetch products");
         }

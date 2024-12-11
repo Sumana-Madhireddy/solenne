@@ -17,7 +17,7 @@ const PORT = process.env.PORT || 5000;
 app.use(bodyParser.json());
 app.use(cors());
 
-const CLIENT_URL = 'http://localhost:PORT';
+const API_ENDPOINT = 'http://localhost:PORT';
 const stripe = Stripe(process.env.STRIPE_SECRET_KEY);
 
 const __filename = fileURLToPath(import.meta.url);

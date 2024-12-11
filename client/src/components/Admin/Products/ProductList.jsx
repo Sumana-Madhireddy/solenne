@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { API_ENDPOINT } from '../../../constants';
 
 const ProductList = () => {
   const [products, setProducts] = useState([]);
@@ -10,10 +11,9 @@ const ProductList = () => {
     fetchProducts();
   }, []);
 
-  // Fetch products from the backend
   const fetchProducts = async () => {
     try {
-      const response = await fetch('http://localhost:5000/products'); // Adjust to your API endpoint
+      const response = await fetch(`${API_ENDPOINT}/products`); 
       const data = await response.json();
       setProducts(data);
     } catch (error) {
@@ -21,12 +21,10 @@ const ProductList = () => {
     }
   };
 
-  // Navigate to Add Product page
   const handleAddProduct = () => {
     navigate('/admin/add-product');
   };
 
-  // Handle product selection for bulk delete
   const handleSelectProduct = (productId) => {
     setSelectedProducts((prev) =>
       prev.includes(productId)
@@ -35,18 +33,17 @@ const ProductList = () => {
     );
   };
 
-  // Delete selected products
   const handleDeleteProducts = async () => {
     try {
       await Promise.all(
         selectedProducts.map((id) =>
-          fetch(`http://localhost:5000/products/${id}`, {
+          fetch(`${API_ENDPOINT}/products/${id}`, {
             method: 'DELETE',
           })
         )
       );
-      fetchProducts(); // Refresh the product list
-      setSelectedProducts([]); // Clear selection
+      fetchProducts(); 
+      setSelectedProducts([]); 
       alert('Selected products deleted successfully');
     } catch (error) {
       console.error('Error deleting products:', error);
@@ -54,7 +51,6 @@ const ProductList = () => {
     }
   };
 
-  // Navigate to Edit Product page
   const handleEditProduct = (productId) => {
     navigate(`/admin/edit-product/${productId}`);
   };
