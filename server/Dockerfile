@@ -37,8 +37,6 @@ COPY . .
 # Expose the port the backend runs on (5000 in your case)
 EXPOSE 5000
 
-COPY .env .env
-
 # Set environment variable for Stripe API key
 # (This assumes you're passing the environment variable from the environment when running the container)
 ENV STRIPE_API_KEY=${STRIPE_API_KEY}
