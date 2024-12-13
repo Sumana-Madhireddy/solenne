@@ -13,12 +13,28 @@ const config = configFile[env];
 const db = {};
 
 // Initialize Sequelize
+// let sequelize;
+// if (config.use_env_variable) {
+//   sequelize = new Sequelize(process.env[config.use_env_variable], config);
+// } else {
+//   sequelize = new Sequelize(config.database, config.username, config.password, config);
+// }
+
 let sequelize;
 if (config.use_env_variable) {
-  sequelize = new Sequelize(process.env[config.use_env_variable], config);
+  // Use DATABASE_URL from environment
+  sequelize = new Sequelize(process.env[config.use_env_variable], {
+    dialect: config.dialect,
+    logging: false, // Set to true for debugging
+  });
 } else {
-  sequelize = new Sequelize(config.database, config.username, config.password, config);
+  sequelize = new Sequelize(config.database, config.username, config.password, {
+    host: config.host,
+    dialect: config.dialect,
+    logging: false, // Set to true for debugging
+  });
 }
+
 
 // Dynamically read and import model files using file:// URLs
 const models = fs.readdirSync(__dirname)
