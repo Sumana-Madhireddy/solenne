@@ -17,12 +17,10 @@ const Signin = ({ onSignIn }) => {
     });
   };
   const navigate = useNavigate();
-  const handleNavigate = () => {
-      navigate(`/admin/dashboard`);
-  };
 
   const handleSignin = async (e) => {
     e.preventDefault();
+    console.log('API Endpoint:', API_ENDPOINT);
     try {
       const response = await fetch(`${API_ENDPOINT}/signin`, {
         method: 'POST',
@@ -41,11 +39,6 @@ const Signin = ({ onSignIn }) => {
         localStorage.setItem('lastName',data.lastName);
         localStorage.setItem('role',data.role);
         localStorage.setItem('email',data.email);
-        // if (data.role === 'admin') {
-        //   navigate('/admin/dashboard'); 
-        // } else {
-        //   navigate('/products'); 
-        // }
         navigate('/'); 
         onSignIn(); 
       } else if(response.status === 404){
