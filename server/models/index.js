@@ -1,7 +1,7 @@
 import fs from 'fs';
 import path from 'path';
 import { Sequelize } from 'sequelize';
-import { fileURLToPath, pathToFileURL } from 'url'; // Use `pathToFileURL` to format paths correctly
+import { fileURLToPath, pathToFileURL } from 'url'; 
 import configFile from '../config/config.json' assert { type: 'json' };
 import process from 'process';
 
