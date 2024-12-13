@@ -69,6 +69,7 @@ app.post('/refresh-token', async (req, res) => {
 const saltRounds = 10;
 app.post('/signup', async (req, res) => {
   const { firstName, lastName, email, password } = req.body;
+  console.log('Request body:',req.body);
   if (!firstName || !lastName || !email || !password) {
       return res.status(400).json({ error: 'All fields are required' });
   }

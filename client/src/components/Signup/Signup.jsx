@@ -28,7 +28,7 @@ const Signup = ({ onSignup }) => {
         },
         body: JSON.stringify(formData),
       });
-
+      console.log("response ",response);
       if (response.ok) {
         const data = await response.json();
         console.log('data signup ',data);
