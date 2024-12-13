@@ -15,9 +15,9 @@ const app = express();
 const PORT = process.env.PORT || 5000;
 app.use(bodyParser.json());
 app.use(cors({
-  origin: 'https://solenne-client.onrender.com', 
-  origin: 'http://localhost:3000', 
+  origin: ['https://solenne-client.onrender.com', 'http://localhost:3000'], 
 }));
+
 // app.use(cors({
 //   origin: '*', // Allow all origins temporarily for debugging
 // }));
