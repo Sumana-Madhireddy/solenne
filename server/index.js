@@ -158,7 +158,7 @@ app.post('/signin', async (req, res) => {
       email: user.email,
     });
   } catch (error) {
-    console.error('Error during sign in:', error.message);
+    console.error('Error during sign in:', error, error.message);
     res.status(500).json({ error: 'Error during sign in' });
   }
 });
