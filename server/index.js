@@ -89,27 +89,80 @@ app.post('/signup', async (req, res) => {
   }
 });
 
+// app.post('/signin', async (req, res) => {
+//     const { email, password } = req.body;
+//     console.log(" email, password ", email, password );
+//     if (!email || !password) {
+//       return res.status(400).json({ error: 'Email and password are required' });
+//     }
+//     try {
+//       const user = await User.findOne({ where: { email } });
+//       if (!user) {
+//         return res.status(404).json({ error: 'User not found' });
+//       }
+//       const isMatch = await bcrypt.compare(password, user.password);
+//       if (!isMatch) {
+//         return res.status(400).json({ error: 'Invalid credentials' });
+//       }
+//       const accessToken = jwt.sign({ userId: user.id }, process.env.JWT_SECRET, { expiresIn: process.env.ACCESS_TOKEN_EXPIRY });
+//       const refreshToken = jwt.sign({ userId: user.id }, process.env.REFRESH_TOKEN_SECRET, { expiresIn: process.env.REFRESH_TOKEN_EXPIRY });
+//       res.json({ accessToken, refreshToken, firstName: user.firstName, lastName: user.lastName, role: user.role, email: user.email });
+//     } catch (error) {
+//       res.status(500).json({ error: 'Error during sign in' });
+//     }
+// });
+
 app.post('/signin', async (req, res) => {
+  try {
+    console.log('Request body:', req.body);
+
     const { email, password } = req.body;
+
     if (!email || !password) {
+      console.error('Missing email or password');
       return res.status(400).json({ error: 'Email and password are required' });
     }
-    try {
-      const user = await User.findOne({ where: { email } });
-      if (!user) {
-        return res.status(404).json({ error: 'User not found' });
-      }
-      const isMatch = await bcrypt.compare(password, user.password);
-      if (!isMatch) {
-        return res.status(400).json({ error: 'Invalid credentials' });
-      }
-      const accessToken = jwt.sign({ userId: user.id }, process.env.JWT_SECRET, { expiresIn: process.env.ACCESS_TOKEN_EXPIRY });
-      const refreshToken = jwt.sign({ userId: user.id }, process.env.REFRESH_TOKEN_SECRET, { expiresIn: process.env.REFRESH_TOKEN_EXPIRY });
-      res.json({ accessToken, refreshToken, firstName: user.firstName, lastName: user.lastName, role: user.role, email: user.email });
-    } catch (error) {
-      res.status(500).json({ error: 'Error during sign in' });
+
+    const user = await User.findOne({ where: { email } });
+    if (!user) {
+      console.error('User not found:', email);
+      return res.status(404).json({ error: 'User not found' });
     }
+
+    const isMatch = await bcrypt.compare(password, user.password);
+    if (!isMatch) {
+      console.error('Invalid credentials for user:', email);
+      return res.status(400).json({ error: 'Invalid credentials' });
+    }
+
+    const accessToken = jwt.sign(
+      { userId: user.id },
+      process.env.JWT_SECRET,
+      { expiresIn: process.env.ACCESS_TOKEN_EXPIRY }
+    );
+
+    const refreshToken = jwt.sign(
+      { userId: user.id },
+      process.env.REFRESH_TOKEN_SECRET,
+      { expiresIn: process.env.REFRESH_TOKEN_EXPIRY }
+    );
+
+    console.log('Signin successful for user:', email);
+
+    res.json({
+      accessToken,
+      refreshToken,
+      firstName: user.firstName,
+      lastName: user.lastName,
+      role: user.role,
+      email: user.email,
+    });
+  } catch (error) {
+    console.error('Error during sign in:', error.message);
+    res.status(500).json({ error: 'Error during sign in' });
+  }
 });
+
 
 app.get('/products',async (req,res)=>{
     try {
