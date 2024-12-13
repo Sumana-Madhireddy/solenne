@@ -16,7 +16,12 @@ const PORT = process.env.PORT || 5000;
 app.use(bodyParser.json());
 app.use(cors({
   origin: 'https://solenne-client.onrender.com', 
+  origin: 'http://localhost:3000', 
 }));
+// app.use(cors({
+//   origin: '*', // Allow all origins temporarily for debugging
+// }));
+
 
 const API_ENDPOINT = 'http://localhost:PORT';
 const stripe = Stripe(process.env.STRIPE_SECRET_KEY);          
