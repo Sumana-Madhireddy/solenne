@@ -15,6 +15,10 @@
   },
   "production": {
     "use_env_variable": "DATABASE_URL",
-    "dialect": "postgres"
+    "dialect": "postgres",
+    "username": "solennedb_user",
+    "password": "uw9HcUb0ge2lAfhwJFOgyczk16FxVd3Z",
+    "database": "solennedb",
+    "host": "solennedb.postgres.render.com"
   }
 }
