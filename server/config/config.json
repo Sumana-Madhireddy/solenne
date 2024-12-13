@@ -14,7 +14,7 @@
     "dialect": "mysql"
   },
   "production": {
-    "use_env_variable": "DATABASE_URL",
+    "use_env_variable": "postgresql://solennedb_user:uw9HcUb0ge2lAfhwJFOgyczk16FxVd3Z@dpg-ctcpk1jtq21c73fuger0-a/solennedb",
     "dialect": "postgres",
     "username": "solennedb_user",
     "password": "uw9HcUb0ge2lAfhwJFOgyczk16FxVd3Z",
