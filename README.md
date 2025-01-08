@@ -1,5 +1,8 @@
 # Solenne E-commerce Website
 
+![image](https://github.com/user-attachments/assets/c245febe-110f-4ddb-a996-e6bcc1aac7ba)
+
+
 Solenne is a modern and user-friendly e-commerce platform designed to provide a seamless shopping experience. This web application allows users to browse products, add them to their cart, and complete secure payments. Additionally, it features an admin dashboard for managing products, orders, and customers.
 
 ## Features
